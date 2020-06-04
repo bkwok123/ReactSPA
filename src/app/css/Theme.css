@@ -1,0 +1,274 @@
+/* ################################################################################
+ LIGHT Theme
+################################################################################ */
+.ThemeLightFG {
+    border-color: #420f49;
+    background: #56B870;
+    background: linear-gradient(to bottom, #56B870 0%,#a5c956 100%); /* W3C */ 
+    color: #420f49; 
+}
+
+.ThemeLightBG {
+    border-color: #420f49;
+    background-color: white;
+    color: #420f49; 
+}
+
+.ThemeLightBtnFG {
+    color: #420f49;
+    border-color: rgb(100, 99, 99);    
+    background-color: white;
+}
+
+.ThemeLightBtnBG {
+    color: #420f49;
+    border-color: #420f49;    
+    background: #56B870; /* Old browsers */
+    background: linear-gradient(to bottom, #56B870 0%,#a5c956 100%); /* W3C */  
+}
+
+.ThemeLightBox {
+    border-color: #280331;
+    background-color: white;
+}
+
+.ThemeLightStack {
+    background-color: #807e23;
+    border-color: #accc6f;
+    color: rgb(50, 3, 56);
+}
+
+.ThemeLightNstack {
+    background: repeating-linear-gradient(
+        45deg,
+        #807e23,
+        #80a141 10px,
+        #4b5210 10px,
+        #6b741a 20px
+    );
+}
+
+.ThemeLightFill {
+    fill: rgb(85, 2, 78);
+}
+
+.ThemeLightglow {
+    font-family: American Typewriter, serif;
+    color: Purple;
+    text-align: center;
+}
+
+.ThemeLightNavb {
+    background: #F3AAAA; /* Old browsers */
+    background: linear-gradient(to bottom, #F3AAAA 0%,#febf04 100%); /* W3C */
+}
+
+.ThemeLightNavIcon {
+    background-color: rgb(85, 2, 78);
+    cursor: pointer;
+}
+
+.ThemeLightNavt {
+    background: #7abcff; /* Old browsers */
+    background: linear-gradient(to top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* W3C */
+}
+
+.ThemeLightZone {
+    cursor: default;;
+    color:#FFF;
+    border:1px solid #bbb;
+    transition: all 0.3s linear;
+}
+
+.ThemeLightPanel1 {
+    background: #56B870; /* Old browsers */
+    background: linear-gradient(to bottom, #56B870 0%,#a5c956 100%); /* W3C */
+}
+
+.ThemeLightPanel1 > ul {
+    color: white;    
+}
+
+.ThemeLightPanel2 {
+    background: #F3AAAA; /* Old browsers */
+    background: linear-gradient(to bottom, #F3AAAA 0%,#febf04 100%); /* W3C */  
+}
+
+.ThemeLightCard {
+    background: #4096ee;
+}
+
+.ThemeLightCardBox {
+    background: #444;
+    color: white;
+}
+
+.ThemeLightSelects:hover{
+    border-style: solid;
+    border-color: blue;
+}
+
+.ThemeLightSelectc > button:hover{
+    -webkit-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    -moz-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    -o-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    border-style: solid;
+    border-color: blue;
+}
+
+.ThemeLightSelectc > input:hover{
+    border-style: solid;
+    border-color: blue;
+}
+
+.ThemeLightActs{
+    border-width: 2px;
+    border-style: solid;
+    border-color: blue;
+    color: blue;
+}
+
+.ThemeLightActf{
+    fill: blue;
+}
+
+/* ################################################################################
+ DARK Theme
+################################################################################ */
+.ThemeDarkFG {
+    border-color: #61dafb;
+    background-color: #395896; 
+    color: #61dafb;
+}
+
+.ThemeDarkBG {
+    border-color: #61dafb;
+    background-color: #282c34; 
+    color: #61dafb;
+}
+
+.ThemeDarkBtnFG {
+    color: #61dafb;
+    border-color: #61dafb;    
+    background-color: #282c34;
+}
+
+.ThemeDarkBtnBG {
+    color: #61dafb;
+    border-color: #61dafb;    
+    background-color: #344f85;
+}
+
+.ThemeDarkBox {
+    border-color: #73fb61;
+    background-color: #282c34;
+}
+
+.ThemeDarkStack {
+    background-color: #344f85;
+    border-color: #61dafb;
+    color: yellow;
+}
+
+.ThemeDarkNstack {
+    background: repeating-linear-gradient(
+        45deg,
+        #344f85,
+        #606dbc 10px,
+        #465298 10px,
+        #465298 20px
+    );
+}
+
+.ThemeDarkFill {
+    fill: #61dafb;
+}
+
+.ThemeDarkglow {
+    font-family: American Typewriter, serif;
+    color: #fff;
+    text-align: center;
+    -webkit-animation: glow 1s ease-in-out infinite alternate;
+    -moz-animation: glow 1s ease-in-out infinite alternate;
+    animation: glow 1s ease-in-out infinite alternate;
+}
+  
+@keyframes glow {
+    from {
+        text-shadow: 0 0 0.5vw #fff, 0 0 1vw #fff, 0 0 1.5vw #000fe6, 0 0 2vw #000fe6, 0 0 2.5vw #000fe6, 0 0 3vw #000fe6, 0 0 3.5vw #000fe6;
+    }
+    to {
+        text-shadow: 0 0 1vw #fff, 0 0 1.5vw #61dafb, 0 0 2vw #61dafb, 0 0 2.5vw #61dafb, 0 0 3vw #61dafb, 0 0 3.5vw #61dafb, 0 0 4vw #61dafb;
+    }
+}
+
+.ThemeDarkNavb {
+    background: #282c34;
+}
+
+.ThemeDarkNavIcon {
+    background-color: #282c34;
+    cursor: pointer;
+}
+
+.ThemeDarkNavt {
+    background: #180116;
+}
+
+.ThemeDarkZone {
+    cursor: default;;
+    color:#FFF;
+    border:1px solid #bbb;
+    transition: all 0.3s linear;
+}
+
+.ThemeDarkPanel1 {
+    background: rgb(98, 30, 30); /* Old browsers */
+    background: linear-gradient(to top, rgb(98, 30, 30) 0%,rgb(31, 1, 1) 100%); /* W3C */      
+}
+
+.ThemeDarkPanel2 {
+    background: #344f85; /* Old browsers */
+    background: linear-gradient(to top, #344f85 0%,#02112e 100%); /* W3C */    
+}
+
+.ThemeDarkCard {
+    background: #344f85;
+}
+
+.ThemeDarkCardBox {
+    background: #282c34;
+    color: #61dafb;
+}
+
+.ThemeDarkSelects:hover{
+    border-style: solid;
+    border-color: red;
+}
+
+.ThemeDarkSelectc > button:hover{
+    -webkit-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    -moz-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    -o-box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    box-shadow:rgba(0,0,0,0.8) 0px 5px 15px, inset rgba(0,0,0,0.15) 0px -10px 20px;
+    border-style: solid;
+    border-color: red;
+}
+
+.ThemeDarkSelectc > input:hover{
+    border-style: solid;
+    border-color: red;
+    animation: glowBR 1s ease-in-out infinite alternate;
+}
+
+.ThemeDarkActs{
+    border-width: 2px;
+    border-style: solid;
+    border-color: red;
+    color: red;
+}
+
+.ThemeDarkActf{
+    fill: red;
+}

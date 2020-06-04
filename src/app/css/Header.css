@@ -1,0 +1,35 @@
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
+/***********************************************************************
+ *  Nav Bar
+ **********************************************************************/
+ .main-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    font-size: calc(1vw + 1vh);
+    padding: calc(0.25vw + 0.25vh);
+}
+
+.push {
+    margin-left: auto;
+}
+
+.warning {
+    display: flex;
+    margin: 0;
+    font-size: calc(0.25vw + 0.25vh);
+    padding: 0;
+}
+
+/***********************************************************************
+ *  Red Background
+ **********************************************************************/
+ .red {
+    background: #C655BE; /* Old browsers */
+    background: linear-gradient(to top, #C655BE 0%,#cf0404 100%); /* W3C */
+}
