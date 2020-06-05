@@ -2,6 +2,7 @@ import React from 'react';
 import ThemeContext, { themes }  from '../context/themecontext';
 import Nav from '../component/pagenav';
 import Tutorial from '../../tutorial/container/tutorial';
+import VideoCapture from '../../videocapture/container/videocapture';
 import '../css/Theme.css';
 
 class AppsController extends React.Component {
@@ -28,7 +29,10 @@ class AppsController extends React.Component {
         switch (e.target.alt) {
             case "Tutorial":
                 app = <Tutorial />;
-                break;            
+                break;   
+            case "Video Capture":
+                app = <VideoCapture />;
+                break;                            
             case "Settings":
                 app = this.state.activeApp;
                 page = this.state.activePage;

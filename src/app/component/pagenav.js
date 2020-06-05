@@ -40,6 +40,7 @@ class NavFooter extends React.Component {
             <footer className={`zone bottom-nav stickyb ${this.context.navb}`}>
                 <div>
                     <input type="image" src={simg} alt="Tutorial" className={`navbox ${this.context.navicon}`} disabled={this.props.on} onClick={this.props.onClick}></input>
+                    <input type="image" src={simg} alt="Video Capture" className={`navbox ${this.context.navicon}`} disabled={this.props.on} onClick={this.props.onClick}></input>
                     <input type="image" src={thimg} alt="Settings" className={`navbox ${this.context.navicon}`} disabled={this.props.on} onClick={this.props.onClick}></input>
                 </div>
             </footer>

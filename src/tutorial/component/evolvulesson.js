@@ -13,7 +13,7 @@ class EvolvU extends React.Component {
                 <h1>Git Command</h1>
                 <h2>Create a new repository on the command line</h2>
                 <ol className="notelist">
-                    <li>echo "# cohort4-reactcrud" >> README.md</li>
+                    <li>echo "# user-repository" >> README.md</li>
                     <li>git init</li>
                     <li>git add README.md</li>
                     <li>git commit -m "first commit"</li>
@@ -34,7 +34,35 @@ class EvolvU extends React.Component {
                     <li>git commit -m"Updated comment"</li>
                     <li>git status</li>
                     <li>git push</li>
-                </ol>                                               
+                </ol>
+
+                <h1>React App</h1>
+                <h2>Create a React App</h2>
+                <ol className="notelist">
+                    <li>Switch to code root folder</li>
+                    <li>npx create-reat-app app-name</li>
+                </ol>                                                               
+                <h2>Run a react app</h2>
+                <ol className="notelist">
+                    <li>npm start</li>
+                </ol>
+
+                <h1>Pytest</h1>
+                <h2>Run all Tests in a suit</h2>
+                <ol className="notelist">
+                    <li>pipenv shell</li>
+                    <li>pytest -k test_suit -s</li>
+                </ol>                  
+                <h2>Run one of the Tests in a suit</h2>
+                <ol className="notelist">
+                    <li>pipenv shell</li>
+                    <li>pytest -k test1 test_suit.py -s</li>
+                </ol>      
+                <h2>Run Script</h2>
+                <ol className="notelist">
+                    <li>pipenv shell</li>
+                    <li>python main.py</li>
+                </ol>                                                                                                                                                          
             </div>
         );
     }    
