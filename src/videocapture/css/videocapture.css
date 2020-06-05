@@ -1,0 +1,19 @@
+.VideoApp {
+    display: flex;
+    flex-direction: column;               
+    justify-content: center;
+    align-items: center;    
+    min-height: 100vh;
+}
+
+.VideoContent {
+    margin: 0vh;
+}
+
+.VideoContent > video {
+    height: 30vh;
+    margin: 0 1vw 2vw 1vw;
+    vertical-align: top;
+    width: 20vw;
+    object-fit: cover;
+  }
