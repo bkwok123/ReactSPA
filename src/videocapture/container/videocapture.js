@@ -19,6 +19,10 @@ class VideoCapture extends React.Component {
                             audio: true,
                             video: true
                          },
+            controls:   {
+                            sourceON: false,
+                            recordON: false,
+                        },
         };
         this.videoLivRef = React.createRef();
         this.videoRecRef = React.createRef();
@@ -47,6 +51,12 @@ class VideoCapture extends React.Component {
                 alert('navigator.getUserMedia error: ', error);
             }
         }
+
+        this.setState({        
+            controls:   {
+                sourceON: true,
+            },
+        })        
     }
 
     // Stop video source
@@ -62,6 +72,12 @@ class VideoCapture extends React.Component {
           
             this.videoLivRef.current.srcObject = null;
         }
+
+        this.setState({        
+            controls:   {
+                sourceON: false,
+            },
+        })        
     }
 
     recordVideo(e) {
@@ -70,7 +86,7 @@ class VideoCapture extends React.Component {
         this.startRecording();
 
         this.setState({        
-            mediaSource: mediaSource,
+            mediaSource: mediaSource,            
         })
     }
 
@@ -102,7 +118,7 @@ class VideoCapture extends React.Component {
                 options = 'video/mp4';
                 mediaRecorder = new MediaRecorder(stream, options);
                 } catch (e2) {
-                alert('MediaRecorder is not supported by this browser.');
+                alert('MediaRecorder failed to find source in this browser.');
                 console.error('Exception while creating MediaRecorder:', e2);
                 return;
                 }
@@ -138,6 +154,9 @@ class VideoCapture extends React.Component {
 
         this.setState({        
             mediaRecorder: mediaRecorder,
+            controls:   {
+                recordON: true,
+            },            
         })        
     }
     
@@ -154,7 +173,13 @@ class VideoCapture extends React.Component {
                 this.videoRecRef.current.addEventListener('contextmenu', (e) => { 
                     // do something here... 
                     e.preventDefault(); 
-                  }, false);                
+                  }, false);
+                  
+                this.setState({        
+                    controls:   {
+                        recordON: false,
+                    },            
+                })                  
             }
         }
     }
@@ -163,8 +188,25 @@ class VideoCapture extends React.Component {
         const superBuffer = new Blob(this.state.recordedBlobs, {type: 'video/webm'});
         this.videoRecRef.current.src = window.URL.createObjectURL(superBuffer);        
     }
-    
+
+    download() {
+        const blob = new Blob(this.state.recordedBlobs, {type: 'video/webm'});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'test.webm';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }    
+
     render() {
+        const sourceOn = this.state.controls.sourceON;
+        const recordON = this.state.controls.recordON;
+        const sourceOnText = sourceOn ? "Turn off Device" : "Turn on Device";
+        const recordONText = recordON ? "Stop" : "Record";
 
         return (
             <div className={`VideoApp ${this.context.background}`}>
@@ -173,11 +215,10 @@ class VideoCapture extends React.Component {
                     <video id="recorded" autoPlay loop playsInline ref={this.videoRecRef} className={this.context.foreground}></video>
                 </div>
                 <div>
-                    <button onClick={(e) => this.openVideoSource(e)}>Turn on Device</button>
-                    <button onClick={(e) => this.stopStreamedVideo(e)}>Turn off Device</button>
-                    <button onClick={(e) => this.recordVideo(e)}>Record</button>
-                    <button onClick={(e) => this.stopRecording(e)}>Stop</button>
+                    <button onClick={(e) => sourceOn ? this.stopStreamedVideo(e) : this.openVideoSource(e)}>{sourceOnText}</button>
+                    <button onClick={(e) => recordON ? this.stopRecording(e) : this.recordVideo(e)}>{recordONText}</button>
                     <button onClick={(e) => this.playVideo(e)}>Play</button>
+                    <button onClick={(e) => this.download(e)}>Download</button>
                 </div>
             </div>
         );
