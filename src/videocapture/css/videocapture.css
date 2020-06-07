@@ -1,19 +1,42 @@
 .VideoApp {
     display: flex;
-    flex-direction: column;               
+    flex-direction: row;               
     justify-content: center;
     align-items: center;    
     min-height: 100vh;
 }
 
-.VideoContent {
-    margin: 0vh;
+.VideoBox {
+    display: inline-block;
+    position: relative;    
 }
 
-.VideoContent > video {
+.VideoBox > video {
     height: 30vh;
-    margin: 0 1vw 2vw 1vw;
-    vertical-align: top;
     width: 30vw;
+    margin: 0 2vw 0vw 0vw;
+    vertical-align: top;    
     object-fit: cover;
   }
+
+.VideoBox .VideoControls {
+    display: none;
+}
+
+.VideoBox:hover .VideoControls {
+    width: 30vw;
+    display: flex;
+    flex-direction: row;               
+    justify-content: left;
+    align-items: center;    
+
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+}
+
+.VideoControls > button {
+    font-size: 0.6vw;
+    flex-grow: 4;    
+    background-color: Transparent;
+}
