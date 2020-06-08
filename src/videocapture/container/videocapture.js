@@ -25,6 +25,7 @@ class VideoCapture extends React.Component {
             controls:   {
                             sourceON: false,
                         },
+            minbuttons: [],
         };
         this.videoLivRef = React.createRef();
         this.videoRecRef = React.createRef();
@@ -65,26 +66,63 @@ class VideoCapture extends React.Component {
         }) 
     }
 
-
     // Hide video panel
-    hide(e, title) {        
+    hide(e) {        
         const parent = e.target.parentNode;
         const grandparent = parent.parentNode;
         grandparent.className = grandparent.className + " hideBox";
-        grandparent.setAttribute("title", title);
-        console.log(grandparent);
+        const list = this.state.minbuttons;
+
+        const el = document.querySelector("div.VideoMinMenu");
+        if (el) {
+            list.push(<button onClick={(e) => this.unhide(e)} key={grandparent.id}>{grandparent.id}</button>);
+            this.setState({        
+                minbuttons: list,            
+            });
+        }
+    }
+
+    // Only call this when context to change theme is used, as the class to create "hidden"
+    // effect is not in the original render element
+    // The object to be hidden and unhidden must contains a unique id as well
+    rehide() {
+        const el = document.querySelector("div.VideoMinMenu");
+        let el_hidden = document.querySelector("div.hideBox");
+
+        if(el) {
+            if (!el_hidden) {
+                for (let i=0; i < el.children.length; i++) {
+                    console.log(el.children[i].key);
+                    el_hidden = document.querySelector("#" + el.children[i].textContent);
+                    console.log(el_hidden);
+                    el_hidden.className = el_hidden.className + " hideBox";
+                }
+            }
+        }
+
     }
 
     // Unhide hidden video panel
     unhide(e) {
         
         const el = document.querySelector("div.hideBox");
+        const list = this.state.minbuttons;
 
         if (el) {
             let class_name = el.getAttribute("class").replace(" hideBox","");
-            el.setAttribute("class",class_name);
+            el.setAttribute("class",class_name);          
+            
+            const newlist = list.filter(item => item.key !== e.target.textContent);
+
+            this.setState({        
+                minbuttons: newlist,            
+            });
         }
 
+    }
+
+    componentDidUpdate() {
+        this.rehide();
     }
 
     render() {
@@ -114,27 +152,26 @@ class VideoCapture extends React.Component {
         return (            
 
             <div className={`VideoApp ${this.context.background}`}>
-                <div className={`VideoBox ${this.context.background}`}>                    
-                    <video id="live" autoPlay muted playsInline ref={this.videoLivRef} className={this.context.foreground}></video>
+                <div id="Live" className={`VideoBox ${this.context.background}`}>                    
+                    <video autoPlay muted playsInline ref={this.videoLivRef} className={this.context.foreground}></video>
                     <RecordControlBar opendeviceprops={opendeviceprops} recordcontrolprops={recordcontrolprops} />
 
                     <div className="VideoTopMenu">
-                        <button onClick={(e) => this.hide(e, "Live Video")} className={this.context.btnFG}>Hide</button>
+                        <button onClick={(e) => this.hide(e)} className={this.context.btnFG}>Hide</button>
                     </div>                     
                 </div>
 
-                <div className={`VideoBox ${this.context.background }`}>                 
-                    <video id="recorded" autoPlay loop playsInline ref={this.videoRecRef} className={this.context.foreground}></video>
+                <div id="Recorded" className={`VideoBox ${this.context.background}`}>                 
+                    <video autoPlay loop playsInline ref={this.videoRecRef} className={this.context.foreground}></video>
                     <PlayControlBar {...playcontrolprops} />
 
                     <div className="VideoTopMenu">
-                        <button onClick={(e) => this.hide(e, "Recorded Video")} className={this.context.btnFG}>Hide</button>
+                        <button onClick={(e) => this.hide(e)} className={this.context.btnFG}>Hide</button>
                     </div>                                         
                 </div>                            
 
-                <div className="VideoMinMenu">
-                    <button onClick={(e) => this.unhide(e)} className={this.context.btnFG}>Live Video</button>
-                    <button onClick={(e) => this.unhide(e)} className={this.context.btnFG}>Recorded Video</button>
+                <div className={`VideoMinMenu ${this.context.chdbtn}`}>
+                    {this.state.minbuttons}
                 </div>
             </div>
         );
