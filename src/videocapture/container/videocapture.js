@@ -72,7 +72,6 @@ class VideoCapture extends React.Component {
         const grandparent = parent.parentNode;
         grandparent.className = grandparent.className + " hideBox";
         const list = this.state.minbuttons;
-
         const el = document.querySelector("div.VideoMinMenu");
         if (el) {
             list.push(<button onClick={(e) => this.unhide(e)} key={grandparent.id}>{grandparent.id}</button>);
@@ -90,11 +89,9 @@ class VideoCapture extends React.Component {
         let el_hidden = document.querySelector("div.hideBox");
 
         if(el) {
-            if (!el_hidden) {
+            if (!el_hidden) {          
                 for (let i=0; i < el.children.length; i++) {
-                    console.log(el.children[i].key);
                     el_hidden = document.querySelector("#" + el.children[i].textContent);
-                    console.log(el_hidden);
                     el_hidden.className = el_hidden.className + " hideBox";
                 }
             }
@@ -105,7 +102,7 @@ class VideoCapture extends React.Component {
     // Unhide hidden video panel
     unhide(e) {
         
-        const el = document.querySelector("div.hideBox");
+        const el = document.querySelector(".hideBox#"+ e.target.textContent);
         const list = this.state.minbuttons;
 
         if (el) {
