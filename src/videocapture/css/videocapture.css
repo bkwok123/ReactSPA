@@ -11,10 +11,14 @@
     position: relative;    
 }
 
+.hideBox {
+    display: none;
+}
+
 .VideoBox > video {
     height: 40vh;
     width: 40vw;
-    margin: 0 2vw 0vw 0vw;
+    margin: 0 1vw 0vw 1vw;
     vertical-align: top;    
     object-fit: cover;
   }
@@ -25,6 +29,7 @@
 
 .VideoBox:hover .VideoControls {
     width: 40vw;
+    margin: 0 1vw 0vw 1vw;
     display: flex;
     flex-direction: row;               
     justify-content: left;
@@ -38,5 +43,35 @@
 .VideoControls > button {
     font-size: 1vw;
     flex-grow: 4;    
+    background-color: Transparent;
+}
+
+.VideoBox .VideoTopMenu {
+    width: 40vw;
+    margin: 0 1vw 0vw 1vw;
+    display: flex;
+    flex-direction: row-reverse;               
+    justify-content: left;
+    align-items: center;    
+
+    position: absolute;
+    top: 0px;
+}
+
+.VideoTopMenu > button {
+    font-size: 1vw;  
+    background-color: Transparent;
+}
+
+.VideoMinMenu {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    right: 0px;
+    bottom: 10vh;
+}
+
+.VideoMinMenu > button {
+    font-size: 1vw;  
     background-color: Transparent;
 }

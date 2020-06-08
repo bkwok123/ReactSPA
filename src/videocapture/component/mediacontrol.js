@@ -35,8 +35,8 @@ class OpenDeviceControl extends React.Component {
     // Stop video source
     stopStreamedVideo(e) {
 
-        if (this.props.video.srcObject) {
-            const stream = this.props.video.srcObject;
+        if (this.props.videoLiv.srcObject) {
+            const stream = this.props.videoLiv.srcObject;
             const tracks = stream.getTracks();
                   
             tracks.forEach((track) => {
@@ -77,61 +77,63 @@ class RecordControl extends React.Component {
           
     // The nested try blocks will be simplified when Chrome 47 moves to Stable
     startRecording() {
-                
-        let mediaRecorder = null;
-        const react_props = this.props;        
-        let options = {mimeType: 'video/webm;codecs=vp9', bitsPerSecond: 100000};        
-        const recordedBlobs = [];   // Start a new stream every time when start is pressed
-        // const recordedBlobs = this.props.recordedBlobs.slice();  // Append to the current stream every time when start is pressed
-        const stream = this.props.videoLiv.srcObject;
         
-        try {
-            mediaRecorder = new MediaRecorder(stream, options);
-        } 
-        catch (e0) {
-            console.log('Unable to create MediaRecorder with options Object: ', options, e0);
+        if(this.props.videoLiv){
+            let mediaRecorder = null;
+            const react_props = this.props;        
+            let options = {mimeType: 'video/webm;codecs=vp9', bitsPerSecond: 100000};        
+            const recordedBlobs = [];   // Start a new stream every time when start is pressed
+            // const recordedBlobs = this.props.recordedBlobs.slice();  // Append to the current stream every time when start is pressed            
+            const stream = this.props.videoLiv.srcObject;
+            
             try {
-                options = {mimeType: 'video/webm;codecs=vp8', bitsPerSecond: 100000};
                 mediaRecorder = new MediaRecorder(stream, options);
-            } catch (e1) {
-                console.log('Unable to create MediaRecorder with options Object: ', options, e1);
+            } 
+            catch (e0) {
+                console.log('Unable to create MediaRecorder with options Object: ', options, e0);
                 try {
-                    options = 'video/mp4';
+                    options = {mimeType: 'video/webm;codecs=vp8', bitsPerSecond: 100000};
                     mediaRecorder = new MediaRecorder(stream, options);
-                } catch (e2) {
-                    alert('MediaRecorder failed to find source in this browser.');
-                    console.error('Exception while creating MediaRecorder:', e2);
-                return;
+                } catch (e1) {
+                    console.log('Unable to create MediaRecorder with options Object: ', options, e1);
+                    try {
+                        options = 'video/mp4';
+                        mediaRecorder = new MediaRecorder(stream, options);
+                    } catch (e2) {
+                        alert('MediaRecorder failed to find source in this browser.');
+                        console.error('Exception while creating MediaRecorder:', e2);
+                        return;
+                    }
                 }
             }
+            console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+
+            // Attach onstop event function to the mediaRecorder
+            mediaRecorder.onstop = (event) => {
+                console.log('Recorder stopped: ', event);
+            };
+
+            // Attach ondataavailable event function to the mediaRecorder
+            mediaRecorder.ondataavailable = (event) => {
+
+                try{                                                       
+                    if (event.data && event.data.size > 0) {
+                        recordedBlobs.push(event.data);
+        
+                        react_props.setRecordedBlobs(recordedBlobs);
+                    }
+                }    
+                catch(error) {
+                    console.log('Error in handleDataAvailable: ', error);
+                }               
+            }
+
+            // Collect 10ms of data at a time => ondataavailable event is then called to push the data into buffer
+            mediaRecorder.start(10);
+            console.log('MediaRecorder started', mediaRecorder);
+
+            this.props.setMediaRecorder(mediaRecorder);
         }
-        console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
-
-        // Attach onstop event function to the mediaRecorder
-        mediaRecorder.onstop = (event) => {
-            console.log('Recorder stopped: ', event);
-        };
-
-        // Attach ondataavailable event function to the mediaRecorder
-        mediaRecorder.ondataavailable = (event) => {
-
-            try{                                                       
-                if (event.data && event.data.size > 0) {
-                    recordedBlobs.push(event.data);
-    
-                    react_props.setRecordedBlobs(recordedBlobs);
-                }
-            }    
-            catch(error) {
-                console.log('Error in handleDataAvailable: ', error);
-            }               
-        }
-
-        // Collect 10ms of data at a time => ondataavailable event is then called to push the data into buffer
-        mediaRecorder.start(10);
-        console.log('MediaRecorder started', mediaRecorder);
-
-        this.props.setMediaRecorder(mediaRecorder);
     }
     
     stopRecording(e) {
@@ -147,22 +149,24 @@ class RecordControl extends React.Component {
         const superBuffer = new Blob(this.props.recordedBlobs, {type: 'video/webm'});
         const video = this.props.videoRec;
 
-        // Check HTML5 compatibility
-        const supportsVideo = !!document.createElement('video').canPlayType;
-        if (!supportsVideo) {
-            // Turn on inline video control bar
-            video.controls = true;
+        if (video) {
+            // Check HTML5 compatibility
+            const supportsVideo = !!document.createElement('video').canPlayType;
+            if (!supportsVideo) {
+                // Turn on inline video control bar
+                video.controls = true;
 
-            // Turn off "right click menu"
-            video.addEventListener('contextmenu', (e) => { 
-                // do something here... 
-                e.preventDefault(); 
-            }, false); 
+                // Turn off "right click menu"
+                video.addEventListener('contextmenu', (e) => { 
+                    // do something here... 
+                    e.preventDefault(); 
+                }, false); 
+            }
+
+            video.src = window.URL.createObjectURL(superBuffer);
+            video.pause();
+            video.currentTime = 0;                
         }
-
-        video.src = window.URL.createObjectURL(superBuffer);
-        video.pause();
-        video.currentTime = 0;                
     }
 
     render() {
@@ -177,36 +181,62 @@ class RecordControl extends React.Component {
     }  
 }
 
-class PlayControl extends React.Component {
+class RecordControlBar extends React.Component {
+
+    static contextType = ThemeContext;
+
+    render() {
+
+        return (
+            <div className="VideoControls">
+                <OpenDeviceControl {...this.props.opendeviceprops}/>  
+                <RecordControl {...this.props.recordcontrolprops}/>  
+            </div>                   
+        );
+    } 
+    
+}    
+
+class PlayControlBar extends React.Component {
 
     static contextType = ThemeContext;
 
     play(e) {
         const video = this.props.video;
-        (video.paused || video.ended) ? video.play() : video.pause();
+        if (video) {
+            (video.paused || video.ended) ? video.play() : video.pause();
+        }        
     }
 
     stop(e) {
         const video = this.props.video;
-        video.pause();
-        video.currentTime = 0;
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+        }
     }    
 
-    mute(e) {
+    mute(e) {        
         const video = this.props.video;
-        video.muted = !video.muted;
+        if (video) {            
+            video.muted = !video.muted;
+        }
     }
 
     volinc(e) {        
         const video = this.props.video;
-        const currentVolume = Math.floor(video.volume * 10) / 10;
-        if (currentVolume < 1) video.volume += 0.1;
+        if (video) {
+            const currentVolume = Math.floor(video.volume * 10) / 10;
+            if (currentVolume < 1) video.volume += 0.1;
+        }
     }
 
     voldec(e) {        
         const video = this.props.video;
-        const currentVolume = Math.floor(video.volume * 10) / 10;
-        if (currentVolume > 0) video.volume -= 0.1;
+        if (video) {
+            const currentVolume = Math.floor(video.volume * 10) / 10;
+            if (currentVolume > 0) video.volume -= 0.1;
+        }
     }
 
     download() {
@@ -237,4 +267,4 @@ class PlayControl extends React.Component {
     }       
 }
 
-export default { PlayControl, OpenDeviceControl, RecordControl };
+export { PlayControlBar, OpenDeviceControl, RecordControl, RecordControlBar };
