@@ -1,3 +1,27 @@
+.face-recognition-container {
+    display: flex;
+}
+
+.image-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bounding-box-container {
+    position: absolute;
+    display: flex;
+}
+
+.bounding-boxes {
+    position: relative;
+    margin: auto;
+}
+
+.bounding-box-set {
+    box-sizing: border-box;
+}
+
 .bounding-box {
     position: absolute;
     box-shadow: 0 0 5px #149df2 inset;

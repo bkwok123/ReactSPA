@@ -14,19 +14,21 @@ class FaceDetection extends Component {
             app: new Clarifai.App ({apiKey: "6cb9f81096b34514bb4f12dc54f90a13"}),
             input: '',
             imgURL: 'https://samples.clarifai.com/face-det.jpg',
+            imgsize: {},
             box: [],
         }
     }
 
     // Calculate box locations to hightlight a human face based on result returned
     // by Clarifai API
+    // https://www.clarifai.com/model-gallery
+    // Test data:
+    //              imgURL: 'https://samples.clarifai.com/face-det.jpg'
+    //              {top_row: 0.30806005, left_col: 0.21253838, bottom_row: 0.4773681, right_col: 0.30402377}
+    //              {top_row: 0.2116047, left_col: 0.68157023, bottom_row: 0.35884228, right_col: 0.74484473}
+    //              {top_row: 0.41287383, left_col: 0.77967566, bottom_row: 0.5900016, right_col: 0.8505466}
     calculateFaceLocation = (data) => {
-                
-        const image = document.getElementById("idInputimage");
-        const coord = image.getBoundingClientRect();
-        const width = Number(image.width);
-        const height = Number(image.height);
-        
+                        
         const box = [];
         let clarifaiFace;
 
@@ -34,21 +36,24 @@ class FaceDetection extends Component {
 
             clarifaiFace = data.outputs[0].data.regions[i].region_info.bounding_box;
 
-            // Calculate right column and bottom row based on the size of inner window
-            // window.screen size may be off due to margin set in css
             box.push({
-                leftcol: coord.left + clarifaiFace.left_col * width,
-                toprow: coord.top + clarifaiFace.top_row * height,
-                rightcol: window.innerWidth - (coord.left + clarifaiFace.right_col * width),
-                bottomrow: window.innerHeight - (coord.top + clarifaiFace.bottom_row * height)   
-            });
+                leftcol: `${clarifaiFace.left_col * 100}%`,
+                toprow: `${clarifaiFace.top_row * 100}%`,
+                rightcol: `${(1- clarifaiFace.right_col) * 100}%`,
+                bottomrow: `${(1- clarifaiFace.bottom_row) * 100}%`
+            });            
         }         
 
         return box;
     }
 
     displayFaceBox = (box) => {
-        this.setState({box: box});
+        const image = document.getElementById("idInputimage");
+        const coord = image.getBoundingClientRect();
+        const width = Number(image.width);
+        const height = Number(image.height);
+
+        this.setState({box: box, imgsize: {width: width, height: height} });
     }
 
     async onButtonSubmit () {
@@ -71,7 +76,7 @@ class FaceDetection extends Component {
                 <div className="FaceDetectionControl">
                     <button onClick={() => this.onButtonSubmit()} className={this.context.btnFG}>Submit</button>                    
                 </div>
-                <FaceRecognition imgURL={this.state.imgURL} box={this.state.box}/>
+                <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
             </div>
         );
     }    
