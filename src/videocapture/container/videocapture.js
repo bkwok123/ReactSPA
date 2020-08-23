@@ -1,5 +1,6 @@
 import React from 'react';
 import ThemeContext from '../../app/context/themecontext';
+import { RecordControlBar, PlayControlBar} from '../component/mediacontrol';
 import '../css/videocapture.css';
 
 // https://developer.mozilla.org/en-US/docs/Web/Guide/Audio_and_video_delivery/Video_player_styling_basics
@@ -24,240 +25,150 @@ class VideoCapture extends React.Component {
             controls:   {
                             sourceON: false,
                         },
+            minbuttons: [],
         };
         this.videoLivRef = React.createRef();
         this.videoRecRef = React.createRef();
     }
-    
-    // Open video source, traffic must be a secured section
-    async openVideoSource (e) {
 
-        const isSecureOrigin = window.location.protocol === 'https:' || window.location.host.includes('localhost');
-        if (!isSecureOrigin) {
-            alert('getUserMedia() must be run from a secure origin: HTTPS or localhost.' +
-                  '\n\nChanging protocol to HTTPS');
-        }
-        else {
-            let stream = null;
-
-            try {
-                stream = await navigator.mediaDevices.getUserMedia(this.state.constraints);                             
-
-                // Attach stream from opened video source to DOM object        
-                console.log('getUserMedia() got stream: ', stream);
-                this.videoLivRef.current.srcObject = stream;
-            } 
-            catch(error) {
-                // Notify user when video source fail to open
-                alert('navigator.getUserMedia error: ', error);
-            }
-        }
-
+    setDeviceControlState(switchOn) {
         this.setState({        
             controls:   {
-                sourceON: true,
+                sourceON: switchOn,
             },
-        })        
+        })  
     }
 
-    // Stop video source
-    stopStreamedVideo(e) {
-
-        if (this.videoLivRef.current.srcObject) {
-            const stream = this.videoLivRef.current.srcObject;
-            const tracks = stream.getTracks();
-                  
-            tracks.forEach((track) => {
-                track.stop();
-            });
-          
-            this.videoLivRef.current.srcObject = null;
-        }
-
-        this.setState({        
-            controls:   {
-                sourceON: false,
-            },
-        })        
+    // Used by Open Device Component
+    setLiveVideo(stream, switchOn) {
+        this.videoLivRef.current.srcObject = stream;
+        this.setDeviceControlState(switchOn);
     }
 
-    recordVideo(e) {
-        let mediaSource = new MediaSource();
-        mediaSource.addEventListener('sourceopen', this.handleSourceOpen, false);
-        this.startRecording();
-
+    // Used by Record Component
+    setMediaSource(mediaSource) {
         this.setState({        
             mediaSource: mediaSource,            
-        })
-    }
-
-    handleSourceOpen(event) {
-        console.log('MediaSource opened');
-        const sourceBuffer = this.mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
-        console.log('Source buffer: ', sourceBuffer);
-    }
-          
-    // The nested try blocks will be simplified when Chrome 47 moves to Stable
-    startRecording() {
-                
-        let mediaRecorder = null;
-        const react_this = this;        
-        let options = {mimeType: 'video/webm;codecs=vp9', bitsPerSecond: 100000};        
-        const recordedBlobs = [];   // Start a new stream every time when start is pressed
-        // const recordedBlobs = this.state.recordedBlobs.slice();  // Append to the current stream every time when start is pressed
-        const stream = this.videoLivRef.current.srcObject;
-        
-        try {
-            mediaRecorder = new MediaRecorder(stream, options);
-        } 
-        catch (e0) {
-            console.log('Unable to create MediaRecorder with options Object: ', options, e0);
-            try {
-                options = {mimeType: 'video/webm;codecs=vp8', bitsPerSecond: 100000};
-                mediaRecorder = new MediaRecorder(stream, options);
-            } catch (e1) {
-                console.log('Unable to create MediaRecorder with options Object: ', options, e1);
-                try {
-                    options = 'video/mp4';
-                    mediaRecorder = new MediaRecorder(stream, options);
-                } catch (e2) {
-                    alert('MediaRecorder failed to find source in this browser.');
-                    console.error('Exception while creating MediaRecorder:', e2);
-                return;
-                }
-            }
-        }
-        console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
-
-        // Attach onstop event function to the mediaRecorder
-        mediaRecorder.onstop = (event) => {
-            console.log('Recorder stopped: ', event);
-        };
-
-        // Attach ondataavailable event function to the mediaRecorder
-        mediaRecorder.ondataavailable = (event) => {
-
-            try{                                                       
-                if (event.data && event.data.size > 0) {
-                    recordedBlobs.push(event.data);
-    
-                    react_this.setState({        
-                        recordedBlobs: recordedBlobs,
-                    });
-                }
-            }    
-            catch(error) {
-                console.log('Error in handleDataAvailable: ', error);
-            }               
-        }
-
-        // Collect 10ms of data at a time => ondataavailable event is then called to push the data into buffer
-        mediaRecorder.start(10);
-        console.log('MediaRecorder started', mediaRecorder);
-
-        this.setState({        
-            mediaRecorder: mediaRecorder,
         })        
     }
-    
-    stopRecording(e) {
-        if(this.state.mediaRecorder) {            
-            if (this.state.mediaRecorder.state !== "inactive") {
-                this.state.mediaRecorder.stop();
-                console.log('Recorded Blobs: ', this.state.recordedBlobs);                                              
+
+    // Used by Record Component
+    setRecordedBlobs(recordedBlobs) {
+        this.setState({        
+            recordedBlobs: recordedBlobs,            
+        }) 
+    }
+
+    // Used by Record Component
+    setMediaRecorder(mediaRecorder) {
+        this.setState({        
+            mediaRecorder: mediaRecorder,            
+        }) 
+    }
+
+    // Hide video panel
+    hide(e) {        
+        const parent = e.target.parentNode;
+        const grandparent = parent.parentNode;
+        grandparent.className = grandparent.className + " hideBox";
+        const list = this.state.minbuttons;
+        const el = document.querySelector("div.VideoMinMenu");
+        if (el) {
+            list.push(<button onClick={(e) => this.unhide(e)} key={grandparent.id}>{grandparent.id}</button>);
+            this.setState({        
+                minbuttons: list,            
+            });
+        }
+    }
+
+    // Only call this when context to change theme is used, as the class to create "hidden"
+    // effect is not in the original render element
+    // The object to be hidden and unhidden must contains a unique id as well
+    rehide() {
+        const el = document.querySelector("div.VideoMinMenu");
+        let el_hidden = document.querySelector("div.hideBox");
+
+        if(el) {
+            if (!el_hidden) {          
+                for (let i=0; i < el.children.length; i++) {
+                    el_hidden = document.querySelector("#" + el.children[i].textContent);
+                    el_hidden.className = el_hidden.className + " hideBox";
+                }
             }
         }
+
     }
-    
-    streamVideo(e) {
-        const superBuffer = new Blob(this.state.recordedBlobs, {type: 'video/webm'});
-        const video = this.videoRecRef.current;
 
-        // Check HTML5 compatibility
-        const supportsVideo = !!document.createElement('video').canPlayType;
-        if (!supportsVideo) {
-            // Turn on inline video control bar
-            this.videoRecRef.current.controls = true;
+    // Unhide hidden video panel
+    unhide(e) {
+        
+        const el = document.querySelector(".hideBox#"+ e.target.textContent);
+        const list = this.state.minbuttons;
 
-            // Turn off "right click menu"
-            this.videoRecRef.current.addEventListener('contextmenu', (e) => { 
-                // do something here... 
-                e.preventDefault(); 
-            }, false); 
+        if (el) {
+            let class_name = el.getAttribute("class").replace(" hideBox","");
+            el.setAttribute("class",class_name);          
+            
+            const newlist = list.filter(item => item.key !== e.target.textContent);
+
+            this.setState({        
+                minbuttons: newlist,            
+            });
         }
 
-        video.src = window.URL.createObjectURL(superBuffer);
-        video.pause();
-        video.currentTime = 0;                
     }
 
-    play(e) {
-        const video = this.videoRecRef.current;
-        (video.paused || video.ended) ? video.play() : video.pause();
+    componentDidUpdate() {
+        this.rehide();
     }
-
-    stop(e) {
-        const video = this.videoRecRef.current;
-        video.pause();
-        video.currentTime = 0;
-    }    
-
-    mute(e) {
-        const video = this.videoRecRef.current;
-        video.muted = !video.muted;
-    }
-
-    volinc(e) {        
-        const video = this.videoRecRef.current;
-        const currentVolume = Math.floor(video.volume * 10) / 10;
-        if (currentVolume < 1) video.volume += 0.1;
-    }
-
-    voldec(e) {        
-        const video = this.videoRecRef.current;
-        const currentVolume = Math.floor(video.volume * 10) / 10;
-        if (currentVolume > 0) video.volume -= 0.1;
-    }
-
-    download() {
-        const blob = new Blob(this.state.recordedBlobs, {type: 'video/webm'});
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'test.webm';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      }    
 
     render() {
-        const sourceOn = this.state.controls.sourceON;
-        const sourceOnText = sourceOn ? "Turn off Device" : "Turn on Device";
 
-        return (
+        const playcontrolprops = {
+                                    video: this.videoRecRef.current, 
+                                    recordedBlobs: this.state.recordedBlobs
+                                }
+
+        const opendeviceprops = {
+            videoLiv: this.videoLivRef.current, 
+            constraints: this.state.constraints,
+            controls: this.state.controls,
+            setLiveVideo: (stream, switchOn) => this.setLiveVideo(stream, switchOn),
+        }
+
+        const recordcontrolprops = {
+            videoLiv: this.videoLivRef.current,
+            videoRec: this.videoRecRef.current,
+            mediaRecorder: this.state.mediaRecorder,
+            recordedBlobs: this.state.recordedBlobs,
+            setMediaSource: (mediaSource) => this.setMediaSource(mediaSource),
+            setMediaRecorder: (mediaRecorder) => this.setMediaRecorder(mediaRecorder),
+            setRecordedBlobs: (recordedBlobs) => this.setRecordedBlobs(recordedBlobs),
+        }        
+
+        return (            
+
             <div className={`VideoApp ${this.context.background}`}>
-                <div className={`VideoBox ${this.context.background }`}>                    
-                    <video id="live" autoPlay muted playsInline ref={this.videoLivRef} className={this.context.foreground}></video>
-                    <div className="VideoControls">
-                        <button onClick={(e) => sourceOn ? this.stopStreamedVideo(e) : this.openVideoSource(e)} className={this.context.btnFG}>{sourceOnText}</button>
-                        <button onClick={(e) => this.recordVideo(e)} className={this.context.btnFG}>Record</button>
-                        <button onClick={(e) => this.stopRecording(e)} className={this.context.btnFG}>Stop</button>
-                        <button onClick={(e) => this.streamVideo(e)} className={this.context.btnFG}>Stream</button>
-                    </div>                                        
+                <div id="Live" className={`VideoBox ${this.context.background}`}>                    
+                    <video autoPlay muted playsInline ref={this.videoLivRef} className={this.context.foreground}></video>
+                    <RecordControlBar opendeviceprops={opendeviceprops} recordcontrolprops={recordcontrolprops} />
+
+                    <div className="VideoTopMenu">
+                        <button onClick={(e) => this.hide(e)} className={this.context.btnFG}>Hide</button>
+                    </div>                     
                 </div>
 
-                <div className={`VideoBox ${this.context.background }`}>                 
-                    <video id="recorded" autoPlay loop playsInline ref={this.videoRecRef} className={this.context.foreground}></video>
-                    <div className="VideoControls">
-                        <button onClick={(e) => this.play(e)} className={this.context.btnFG}>Play</button>
-                        <button onClick={(e) => this.stop(e)} className={this.context.btnFG}>Stop</button>
-                        <button onClick={(e) => this.mute(e)} className={this.context.btnFG}>Mute</button>
-                        <button onClick={(e) => this.volinc(e)} className={this.context.btnFG}>+</button>
-                        <button onClick={(e) => this.voldec(e)} className={this.context.btnFG}>-</button>
-                        <button onClick={(e) => this.download(e)} className={this.context.btnFG}>Download</button>                    
-                    </div>                    
+                <div id="Recorded" className={`VideoBox ${this.context.background}`}>                 
+                    <video autoPlay loop playsInline ref={this.videoRecRef} className={this.context.foreground}></video>
+                    <PlayControlBar {...playcontrolprops} />
+
+                    <div className="VideoTopMenu">
+                        <button onClick={(e) => this.hide(e)} className={this.context.btnFG}>Hide</button>
+                    </div>                                         
+                </div>                            
+
+                <div className={`VideoMinMenu ${this.context.chdbtn}`}>
+                    {this.state.minbuttons}
                 </div>
             </div>
         );

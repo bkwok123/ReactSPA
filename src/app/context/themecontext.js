@@ -22,7 +22,8 @@ export const themes = {
       selectSelf: 'ThemeLightSelects',
       selectChd: 'ThemeLightSelectc',
       activefill: 'ThemeLightActf',
-      activeSelf: 'ThemeLightActs',            
+      activeSelf: 'ThemeLightActs',
+      chdbtn: 'ThemeLightChdBtn',
     },
     dark: {
       foreground: 'ThemeDarkFG',
@@ -46,6 +47,7 @@ export const themes = {
       selectChd: 'ThemeDarkSelectc',
       activefill: 'ThemeDarkActf',
       activeSelf: 'ThemeDarkActs',
+      chdbtn: 'ThemeDarkChdBtn',
     },
   };
 

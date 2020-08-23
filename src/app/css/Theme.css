@@ -133,6 +133,13 @@
     fill: blue;
 }
 
+.ThemeLightChdBtn > button {
+    color: #420f49;
+    border-color: #420f49;    
+    background: #56B870; /* Old browsers */
+    background: linear-gradient(to bottom, #56B870 0%,#a5c956 100%); /* W3C */  
+}
+
 /* ################################################################################
  DARK Theme
 ################################################################################ */
@@ -271,4 +278,10 @@
 
 .ThemeDarkActf{
     fill: red;
+}
+
+.ThemeDarkChdBtn > button {
+    color: #61dafb;
+    border-color: #61dafb;    
+    background-color: #344f85;
 }
