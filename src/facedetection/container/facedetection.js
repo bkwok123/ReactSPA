@@ -14,23 +14,37 @@ class FaceDetection extends Component {
             app: new Clarifai.App ({apiKey: "6cb9f81096b34514bb4f12dc54f90a13"}),
             input: '',
             imgURL: 'https://samples.clarifai.com/face-det.jpg',
-            box: {},
+            box: [],
         }
     }
 
+    // Calculate box locations to hightlight a human face based on result returned
+    // by Clarifai API
     calculateFaceLocation = (data) => {
-        const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+                
         const image = document.getElementById("idInputimage");
         const coord = image.getBoundingClientRect();
         const width = Number(image.width);
         const height = Number(image.height);
+        
+        const box = [];
+        let clarifaiFace;
 
-        return {
-            leftcol: coord.left + clarifaiFace.left_col * width,
-            toprow: coord.top + clarifaiFace.top_row * height,
-            rightcol: window.innerWidth - (coord.left + clarifaiFace.right_col * width),
-            bottomrow: window.innerHeight - (coord.top + clarifaiFace.bottom_row * height)            
-        }
+        for (let i=0; i<data.outputs[0].data.regions.length; i++) {
+
+            clarifaiFace = data.outputs[0].data.regions[i].region_info.bounding_box;
+
+            // Calculate right column and bottom row based on the size of inner window
+            // window.screen size may be off due to margin set in css
+            box.push({
+                leftcol: coord.left + clarifaiFace.left_col * width,
+                toprow: coord.top + clarifaiFace.top_row * height,
+                rightcol: window.innerWidth - (coord.left + clarifaiFace.right_col * width),
+                bottomrow: window.innerHeight - (coord.top + clarifaiFace.bottom_row * height)   
+            });
+        }         
+
+        return box;
     }
 
     displayFaceBox = (box) => {
@@ -40,14 +54,11 @@ class FaceDetection extends Component {
     async onButtonSubmit () {
         try {         
             const response = await this.state.app.models.predict(
-                // "a403429f2ddf4b49b307e318f00e528b", 
                 Clarifai.FACE_DETECT_MODEL,
                 this.state.imgURL);
 
-            for (let i=0; i<response.outputs[0].data.regions.length; i++) {
-                console.log("Face Detection: ", response.outputs[0].data.regions[i].region_info.bounding_box);
-                this.displayFaceBox(this.calculateFaceLocation(response));
-            }            
+            this.displayFaceBox(this.calculateFaceLocation(response));         
+
         } catch (error) {
             
         }
