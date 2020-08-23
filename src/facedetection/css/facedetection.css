@@ -1,0 +1,12 @@
+.FaceDetectionApp {
+    display: flex;
+    flex-direction: row;               
+    justify-content: center;
+    align-items: center;    
+    min-height: 100vh;
+}
+
+.FaceDetectionControl {
+    height: 40vh;
+    width: 40vw;
+}

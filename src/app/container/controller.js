@@ -3,6 +3,8 @@ import ThemeContext, { themes }  from '../context/themecontext';
 import Nav from '../component/pagenav';
 import Tutorial from '../../tutorial/container/tutorial';
 import VideoCapture from '../../videocapture/container/videocapture';
+import FaceDetection from '../../facedetection/container/facedetection';
+import Graph from '../../graph/container/graph';
 import '../css/Theme.css';
 
 class AppsController extends React.Component {
@@ -32,7 +34,13 @@ class AppsController extends React.Component {
                 break;   
             case "Video Capture":
                 app = <VideoCapture />;
-                break;                            
+                break;     
+            case "Graph":
+                app = <Graph />;
+                break;
+            case "Face Detection":
+                app = <FaceDetection />;
+                break;                                                          
             case "Settings":
                 app = this.state.activeApp;
                 page = this.state.activePage;

@@ -250,7 +250,7 @@ class PlayControlBar extends React.Component {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-      }    
+    }    
 
       render() {
 
