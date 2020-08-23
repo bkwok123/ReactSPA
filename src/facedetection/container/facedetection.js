@@ -20,29 +20,16 @@ class FaceDetection extends Component {
 
     calculateFaceLocation = (data) => {
         const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-        const image = document.getElementById("inputimage");
+        const image = document.getElementById("idInputimage");
         const coord = image.getBoundingClientRect();
         const width = Number(image.width);
         const height = Number(image.height);
-        console.log("coord top: ", coord.top);
-        console.log("coord bottom: ", coord.bottom);
-        console.log("coord left: ", coord.left);
-        console.log("coord right: ", coord.right);
-        console.log("screen height: ", window.screen.height);
-        console.log("screen width: ", window.screen.width);
-        
-        console.log("width: ", width);
-        console.log("height: ", height);
 
         return {
-            // leftcol: clarifaiFace.left_col * width,
-            // toprow: clarifaiFace.top_row * height,
-            // rightcol: width - (clarifaiFace.right_col * width),
-            // bottomrow: width - (clarifaiFace.bottom_row * height)
-            leftcol: coord.left,
-            toprow: coord.top,
-            rightcol: window.screen.width - coord.right,
-            bottomrow: window.screen.height - coord.bottom
+            leftcol: coord.left + clarifaiFace.left_col * width,
+            toprow: coord.top + clarifaiFace.top_row * height,
+            rightcol: window.innerWidth - (coord.left + clarifaiFace.right_col * width),
+            bottomrow: window.innerHeight - (coord.top + clarifaiFace.bottom_row * height)            
         }
     }
 
