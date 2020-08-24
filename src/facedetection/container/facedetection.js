@@ -21,27 +21,16 @@ class FaceDetection extends Component {
 
     componentDidMount () {
         window.addEventListener("resize", this.updateImageSize);
-
-        // Release resources
-        // const img = document.getElementById('idInputimage');
-        // img.onload = () => {
-        //     URL.revokeObjectURL(img.src) // free memory
-        // }
     }
 
-    componentDidUpdate () {
-        window.addEventListener("resize", this.updateImageSize);
-
-        // Release resources
-        // const img = document.getElementById('idInputimage');
-        // img.onload = () => {
-        //     URL.revokeObjectURL(img.src) // free memory
-        // }              
+    componentWillUnmount () {
+        window.removeEventListener("resize", this.updateImageSize);
     }
 
     // Calculate box locations to hightlight a human face based on result returned
     // by Clarifai API
     // https://www.clarifai.com/model-gallery
+    // https://docs.clarifai.com/api-guide/predict/images
     // Test data:
     //              imgURL: 'https://samples.clarifai.com/face-det.jpg'
     //              {top_row: 0.30806005, left_col: 0.21253838, bottom_row: 0.4773681, right_col: 0.30402377}
@@ -51,16 +40,10 @@ class FaceDetection extends Component {
                         
         const box = [];
         let clarifaiFace;
-        let testdata = [];
-        testdata.push({top_row: 0.30806005, left_col: 0.21253838, bottom_row: 0.4773681, right_col: 0.30402377})
-        testdata.push({top_row: 0.2116047, left_col: 0.68157023, bottom_row: 0.35884228, right_col: 0.74484473})
-        testdata.push({top_row: 0.41287383, left_col: 0.77967566, bottom_row: 0.5900016, right_col: 0.8505466})
 
-        for (let i=0; i<testdata.length; i++) {
-        // for (let i=0; i<data.outputs[0].data.regions.length; i++) {
+        for (let i=0; i<data.outputs[0].data.regions.length; i++) {
 
-            // clarifaiFace = data.outputs[0].data.regions[i].region_info.bounding_box;
-            clarifaiFace = testdata[i];
+            clarifaiFace = data.outputs[0].data.regions[i].region_info.bounding_box;
 
             box.push({
                 leftcol: `${clarifaiFace.left_col * 100}%`,
@@ -92,20 +75,26 @@ class FaceDetection extends Component {
     }
 
     async onClickDetect () {
-        try {         
-            // const response = await this.state.app.models.predict(
-            //     Clarifai.FACE_DETECT_MODEL,
-            //     this.state.imgURL);
-            const response=null;
+        try {
+            // Send byte file if local file is used or web link if web resource is used
+            let base64 = this.state.imgURL;
+            const n = base64.search("base64,");
+            base64 = base64.substring(n+7);
+            const img = n > 1 ? base64 : this.state.imgURL
+        
+            // Call third party API to identify face locations
+            const response = await this.state.app.models.predict(
+                Clarifai.FACE_DETECT_MODEL, img);
 
+            // Save calculated face locations in React component states
             this.displayFaceBox(this.calculateFaceLocation(response));         
-
         } catch (error) {
-            
+            console.log("Error Message: ", error, " with image: ", this.state.imgURL);
+            alert("Error in detection: ", this.state.imgURL, error);
         }
     }
 
-    // example:
+    // example link:
     // https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F20%2F2020%2F07%2F19%2Ftiaras-2.jpg
     onChangeImg () {
         const img = document.getElementById("idInputImgLink");
@@ -117,8 +106,13 @@ class FaceDetection extends Component {
     onChangeUpload () {
         const img = document.getElementById("idImgFileSelector");
         if (img.files.length > 0) {
-            const imgURL = URL.createObjectURL(img.files[0]);
-            this.setState({imgURL: imgURL});
+            // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+            // Convert local file to base64 for API consumption
+            const reader = new FileReader();
+            reader.readAsDataURL(img.files[0]);
+            reader.onloadend = () => {
+                this.setState({imgURL: reader.result});
+            }                                  
         }
     }     
 
