@@ -1,5 +1,5 @@
 import React from 'react';
-import "./facerecognition.css";
+import "../css/facerecognition.css";
 
 const FaceRecognition = ({ imgURL, imgsize, box}) => {
     
@@ -8,7 +8,7 @@ const FaceRecognition = ({ imgURL, imgsize, box}) => {
     if(box.length > 0) {
         for (let i=0; i<box.length; i++) {
             displaybox.push(
-            <div className="bounding-box-set">
+            <div className="bounding-box-set" key={`bs${i}`}>
                 <div className="bounding-box" style={{left: box[i].leftcol, top: box[i].toprow, right: box[i].rightcol, bottom: box[i].bottomrow}}></div>
             </div>);
         }        
