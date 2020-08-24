@@ -96,6 +96,8 @@ class FaceDetection extends Component {
 
     // example link:
     // https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F20%2F2020%2F07%2F19%2Ftiaras-2.jpg
+    // https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ5w5KoZUITaB5-DqiKzvbEWYwetwxpNiPu5w&usqp=CAU
+    // https://jooinn.com/images/people-8.jpg
     onChangeImg () {
         const img = document.getElementById("idInputImgLink");
         if (img.value !== "") {
@@ -116,8 +118,8 @@ class FaceDetection extends Component {
         }
     }     
 
-    render() {      
-
+    // https://web.dev/read-files/
+    render() {              
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
                 <div className={`FaceDetectionControl ${this.context.foreground}`}>

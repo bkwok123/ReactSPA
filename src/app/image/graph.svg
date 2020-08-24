@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 190 370"
+   version="1.1"
+   id="svg3771"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="drawing.svg">
+  <defs
+     id="defs3765" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4598">
+      <path
+         sodipodi:stroke-cmyk="(0.0000000 0.0000000 0.0000000 0.80000001)"
+         sodipodi:nodetypes="ccccccc"
+         d="M 10.767625,166.27481 106.4967,129.107 l 37.14746,44.46712 45.72271,-15.26621 v 73.00781 l -179.313849,-2.65195 0.715001,-62.38896 z"
+         style="fill:#008080;fill-rule:evenodd;stroke:#00c3ffff;stroke-width:7.1748929;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:7.174893, 7.17489299999999997"
+         id="path830"
+         inkscape:connector-curvature="0" />
+      <path
+         sodipodi:stroke-cmyk="(0.0000000 0.0000000 0.0000000 0.80000001)"
+         d="m 10.767625,222.53258 95.729075,-37.16781 37.14746,44.46711 45.72271,-15.26252 v 73.00781 l -179.313849,-2.65564 0.715001,-62.38895 z"
+         style="fill:#00ffff;fill-rule:evenodd;stroke:#00c3ffff;stroke-width:7.1748929;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:7.174893, 7.17489299999999997"
+         sodipodi:nodetypes="ccccccc"
+         id="path829"
+         inkscape:connector-curvature="0" />
+      <path
+         sodipodi:stroke-cmyk="(0.0000000 0.0000000 0.0000000 0.80000001)"
+         sodipodi:nodetypes="ccc"
+         d="M 10.900085,109.06417 V 287.76286 H 202.13814"
+         style="fill:none;stroke:#00c3ffff;stroke-width:19.1328907;stroke-linecap:round;stroke-linejoin:round"
+         id="path917"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>
