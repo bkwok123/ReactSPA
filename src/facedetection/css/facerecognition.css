@@ -1,11 +1,13 @@
 .face-recognition-container {
     display: flex;
+    justify-content: center;
+    align-items: center;        
 }
 
 .image-view {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    max-width: 50vw;
+    max-height: 50vh;
 }
 
 .bounding-box-container {
