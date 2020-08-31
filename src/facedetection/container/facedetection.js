@@ -3,6 +3,8 @@ import ThemeContext from '../../app/context/themecontext';
 import Clarifai from 'clarifai';
 import '../css/facedetection.css';
 import FaceRecognition from '../component/facerecognition';
+import FaceDetectionControl from '../component/facedetectioncontrol';
+import ImageIcon from '../component/imageicon';
 
 class FaceDetection extends Component {
 
@@ -11,11 +13,14 @@ class FaceDetection extends Component {
     constructor() {
         super();
         this.state = {
-            app: new Clarifai.App ({apiKey: "6cb9f81096b34514bb4f12dc54f90a13"}),
+            app: new Clarifai.App ({apiKey: "b2d7a7095fd44de5b803b822204b6b4d"}),
             input: '',
             imgURL: 'https://samples.clarifai.com/face-det.jpg',
             imgsize: {},
             box: [],
+            icons: {k1: "https://samples.clarifai.com/face-det.jpg",
+                    k2: "https://jooinn.com/images/people-8.jpg"
+            },
         }
     }
 
@@ -74,23 +79,23 @@ class FaceDetection extends Component {
         this.setState({imgsize: imgsize});
     }
 
-    async onClickDetect () {
+    async onClickDetect (parent) {
         try {
             // Send byte file if local file is used or web link if web resource is used
-            let base64 = this.state.imgURL;
+            let base64 = parent.state.imgURL;
             const n = base64.search("base64,");
             base64 = base64.substring(n+7);
-            const img = n > 1 ? base64 : this.state.imgURL
+            const img = n > 1 ? base64 : parent.state.imgURL
         
             // Call third party API to identify face locations
-            const response = await this.state.app.models.predict(
+            const response = await parent.state.app.models.predict(
                 Clarifai.FACE_DETECT_MODEL, img);
 
             // Save calculated face locations in React component states
-            this.displayFaceBox(this.calculateFaceLocation(response));         
+            parent.displayFaceBox(parent.calculateFaceLocation(response));         
         } catch (error) {
-            console.log("Error Message: ", error, " with image: ", this.state.imgURL);
-            alert("Error in detection: ", this.state.imgURL, error);
+            console.log("Error Message: ", error, " with image: ", parent.state.imgURL);
+            alert("Error in detection: ", parent.state.imgURL, error);
         }
     }
 
@@ -105,7 +110,7 @@ class FaceDetection extends Component {
         }        
     }
 
-    onChangeUpload () {
+    onChangeUpload (parent) {
         const img = document.getElementById("idImgFileSelector");
         if (img.files.length > 0) {
             // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
@@ -113,7 +118,7 @@ class FaceDetection extends Component {
             const reader = new FileReader();
             reader.readAsDataURL(img.files[0]);
             reader.onloadend = () => {
-                this.setState({imgURL: reader.result});
+                parent.setState({imgURL: reader.result});
             }                                  
         }
     }     
@@ -122,20 +127,9 @@ class FaceDetection extends Component {
     render() {              
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
-                <div className={`FaceDetectionControl ${this.context.foreground}`}>
-                    <button onClick={() => this.onChangeUpload()} className={`${this.context.btnFG} fdControlB1`}>Refresh Local</button>
-                    <label className={`${this.context.btnFG} fdControlB2 inputborder`}>
-                        <input id="idImgFileSelector" type="file" accept=".jpg, .jpeg, .png" onChange={() => this.onChangeUpload()}></input>
-                        Upload Local Image
-                    </label>
-                    
-                    <button onClick={() => this.onChangeImg()} className={`${this.context.btnFG} fdControlB3`}>Refresh Web Link</button>
-                    <label className={`${this.context.btnFG} fdControlL1`}>Enter an external link on web: </label>
-                    <input id="idInputImgLink" type="text" onChange={() => this.onChangeImg()} className={`${this.context.btnFG} fdControlI1`}></input>
-
-                    <button onClick={() => this.onClickDetect()} className={`${this.context.btnFG} fdControlB4`}>Detect</button>
-                </div>
-                <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
+                <FaceDetectionControl parent={this}/>
+                <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>             
+                <ImageIcon icons={this.state.icons}/>
             </div>
         );
     }    

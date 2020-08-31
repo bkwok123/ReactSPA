@@ -1,0 +1,54 @@
+.inputborder {
+    border: 2px solid;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.FaceDetectionControl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(5vw, auto));
+    grid-template-rows: 5vh;
+    grid-template-areas: "b1 b2"
+                         "b3 l1"
+                         "i1 i1"
+                         "b4 b4";
+    justify-content: center;
+    align-items: center;
+    border-radius: 2vh;
+    width: 30vw;
+    min-height: 20vh;
+  }
+
+.fdControlB1 {
+    grid-area: b1;
+}
+
+.fdControlB2 {
+    grid-area: b2;
+    text-align: center;
+}
+
+.fdControlB3 {
+    grid-area: b3;
+}
+
+.fdControlB4 {
+    grid-area: b4;
+}
+
+.fdControlL1 {
+    grid-area: l1;
+}
+
+.fdControlI1 {
+    grid-area: i1;
+}
+
+.FaceDetectionControl > label, input, button {
+    font-size: calc(0.65vw + 0.65vh);
+    padding: 0.3vh 0.3vw 0.3vh 0.3vw; 
+    margin: 0.1vh 0.1vw 0.1vh 0.1vw;    /* top right bottom left*/
+    border-radius: calc(0.5vw + 0.5vh); /* top right bottom left*/
+}
