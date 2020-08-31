@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import './modalbox.css';
+import '../css/modalbox.css';
 
 export class ModalBox extends Component {
 
   render() {
+
     return (
       <div id={this.props.boxID} className={this.props.hide ? "modalhide":"modalshow"}>
         <div className="modal-content">

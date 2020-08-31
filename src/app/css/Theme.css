@@ -140,6 +140,10 @@
     background: linear-gradient(to bottom, #56B870 0%,#a5c956 100%); /* W3C */  
 }
 
+.ThemeLightBorder {
+    border-color: #420f49;
+}
+
 /* ################################################################################
  DARK Theme
 ################################################################################ */
@@ -284,4 +288,8 @@
     color: #61dafb;
     border-color: #61dafb;    
     background-color: #344f85;
+}
+
+.ThemeDarkBorder {
+    border-color: #61dafb;
 }

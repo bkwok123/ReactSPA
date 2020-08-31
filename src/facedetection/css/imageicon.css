@@ -13,3 +13,7 @@
     max-width: 3vw;
     max-height: 3vh;    
 }
+
+.image-icon:hover {
+    cursor: pointer;
+}

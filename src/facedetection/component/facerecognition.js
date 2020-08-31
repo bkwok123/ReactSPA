@@ -16,7 +16,7 @@ const FaceRecognition = ({ imgURL, imgsize, box}) => {
 
     return (
         <div className="face-recognition-container">        
-            <img id="idInputimage" src={imgURL} alt="Face Detection" className="image-view"/>
+            <img id="idInputimage" src={imgURL} className="image-view"/>
             <div className="bounding-box-container">
                 <div className="bounding-boxes" style={{width: imgsize.width, height: imgsize.height}}>
                     {displaybox}

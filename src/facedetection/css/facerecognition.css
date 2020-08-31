@@ -1,7 +1,10 @@
 .face-recognition-container {
     display: flex;
     justify-content: center;
-    align-items: center;        
+    align-items: center;
+    margin: 2vh 2vw;
+    width: 50vw;
+    height: 50vh;            
 }
 
 .image-view {

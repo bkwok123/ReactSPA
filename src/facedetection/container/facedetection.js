@@ -5,6 +5,7 @@ import '../css/facedetection.css';
 import FaceRecognition from '../component/facerecognition';
 import FaceDetectionControl from '../component/facedetectioncontrol';
 import ImageIcon from '../component/imageicon';
+import ModalBox from '../component/modalbox';
 
 class FaceDetection extends Component {
 
@@ -15,12 +16,21 @@ class FaceDetection extends Component {
         this.state = {
             app: new Clarifai.App ({apiKey: "b2d7a7095fd44de5b803b822204b6b4d"}),
             input: '',
-            imgURL: 'https://samples.clarifai.com/face-det.jpg',
+            imgURL: '',
             imgsize: {},
             box: [],
-            icons: {k1: "https://samples.clarifai.com/face-det.jpg",
-                    k2: "https://jooinn.com/images/people-8.jpg"
-            },
+            icons: [{url: "https://samples.clarifai.com/face-det.jpg",
+                     boxdata: {
+                                outputs: [{
+                                    data: {
+                                    regions: [
+                                        {region_info:{bounding_box: {top_row: 0.30806005, left_col: 0.21253838, bottom_row: 0.4773681, right_col: 0.30402377}}},
+                                        {region_info:{bounding_box: {top_row: 0.2116047, left_col: 0.68157023, bottom_row: 0.35884228, right_col: 0.74484473}}},
+                                        {region_info:{bounding_box: {top_row: 0.41287383, left_col: 0.77967566, bottom_row: 0.5900016, right_col: 0.8505466}}}
+                                    ]}}],
+                                status: {code: 10000, description: "Ok", req_id: "51216f4580ec4fa0a356dcfa478aa865"}
+                            }
+                    }],
         }
     }
 
@@ -79,23 +89,25 @@ class FaceDetection extends Component {
         this.setState({imgsize: imgsize});
     }
 
-    async onClickDetect (parent) {
+    async onClickDetect () {
         try {
             // Send byte file if local file is used or web link if web resource is used
-            let base64 = parent.state.imgURL;
+            let base64 = this.state.imgURL;
             const n = base64.search("base64,");
             base64 = base64.substring(n+7);
-            const img = n > 1 ? base64 : parent.state.imgURL
+            const img = n > 1 ? base64 : this.state.imgURL
         
             // Call third party API to identify face locations
-            const response = await parent.state.app.models.predict(
+            const response = await this.state.app.models.predict(
                 Clarifai.FACE_DETECT_MODEL, img);
 
+            console.log(response);
+
             // Save calculated face locations in React component states
-            parent.displayFaceBox(parent.calculateFaceLocation(response));         
+            this.displayFaceBox(this.calculateFaceLocation(response));
         } catch (error) {
-            console.log("Error Message: ", error, " with image: ", parent.state.imgURL);
-            alert("Error in detection: ", parent.state.imgURL, error);
+            console.log("Error Message: ", error, " with image: ", this.state.imgURL);
+            alert("Error in detection: ", this.state.imgURL, error);
         }
     }
 
@@ -106,7 +118,10 @@ class FaceDetection extends Component {
     onChangeImg () {
         const img = document.getElementById("idInputImgLink");
         if (img.value !== "") {
-            this.setState({imgURL: img.value});
+            const icons = this.state.icons.slice();
+            icons.push({url: img.value});
+
+            this.setState({imgURL: img.value, icons: icons});
         }        
     }
 
@@ -115,21 +130,48 @@ class FaceDetection extends Component {
         if (img.files.length > 0) {
             // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
             // Convert local file to base64 for API consumption
-            const reader = new FileReader();
-            reader.readAsDataURL(img.files[0]);
-            reader.onloadend = () => {
-                parent.setState({imgURL: reader.result});
-            }                                  
+            this.handleFile(parent, img.files[0]);                          
         }
     }     
+
+    handleFile (parent, file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            const icons = parent.state.icons.slice();
+            icons.push({url: reader.result});
+            parent.setState({imgURL: reader.result, icons: icons});
+        }
+    }
+
+    onClickIcon (e) {
+        // NEED TO Revise the icons array to using key-value pair and updating new images
+        const box = this.calculateFaceLocation(this.state.icons[0].boxdata);
+        console.log("onClickIcon:", box);        
+        this.setState({imgURL: e.target.src, box: box, imgsize: this.getImageSize()});
+    }
+
+    onClickModal (id) {
+        const modal = document.getElementById(id);
+        modal.setAttribute("class", "modalshow");
+    }
+    
+    onClickCloseModal (e){
+        const modal = e.target.parentNode.parentNode;
+        modal.setAttribute("class", "modalhide");
+        e.stopPropagation(); 
+    };
 
     // https://web.dev/read-files/
     render() {              
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
-                <FaceDetectionControl parent={this}/>
-                <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>             
-                <ImageIcon icons={this.state.icons}/>
+                <button onClick={(e) => this.onClickModal("idFDmodal")} className={`${this.context.btnFG}`}>Add Image</button>
+                <ModalBox boxID="idFDmodal" hide={true} content={<FaceDetectionControl parent={this}/>} onClickModalClose={(e) => this.onClickCloseModal(e)}/>
+                <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
+                <ImageIcon icons={this.state.icons} onClickIcon={(e) => this.onClickIcon(e)}/>
+
+                <button onClick={() => this.onClickDetect()} className={`${this.context.btnFG}`}>Detect</button>
             </div>
         );
     }    
