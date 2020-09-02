@@ -38,6 +38,14 @@ class FaceDetection extends Component {
         window.addEventListener("resize", this.updateImageSize);
     }
 
+    componentDidUpdate () {
+
+        const imgsize = this.getImageSize();
+        if((this.state.imgsize.width !== imgsize.width) || (this.state.imgsize.height !== imgsize.height)) {
+            this.setState({imgsize: imgsize});
+        }
+    }    
+
     componentWillUnmount () {
         window.removeEventListener("resize", this.updateImageSize);
     }
@@ -148,7 +156,7 @@ class FaceDetection extends Component {
         // NEED TO Revise the icons array to using key-value pair and updating new images
         const box = this.calculateFaceLocation(this.state.icons[0].boxdata);
         console.log("onClickIcon:", box);        
-        this.setState({imgURL: e.target.src, box: box, imgsize: this.getImageSize()});
+        this.setState({imgURL: e.target.src, box: box});
     }
 
     onClickModal (id) {
