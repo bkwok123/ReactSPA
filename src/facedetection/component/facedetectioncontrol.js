@@ -7,9 +7,7 @@ class FaceDetectionControl extends Component {
     static contextType = ThemeContext;
 
     // https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
-    dropHandler(e) {
-        console.log('File(s) dropped');
-        
+    dropHandler(e) {        
         // Prevent default behavior (Prevent file from being opened)
         e.preventDefault();
         

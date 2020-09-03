@@ -7,11 +7,7 @@ class ImageIcon extends Component {
     static contextType = ThemeContext;
 
     render() {              
-        const icons = [];
-        
-        // for (let i=0; i<this.props.icons.length; i++) {
-        //     icons.push(<img id={`idIconimage${i}`} key={i} src={this.props.icons[i].url} alt={`Icon ${i}`} onClick={(e) => this.props.onClickIcon(e)} className="image-icon"/>);
-        // }
+        const icons = [];        
 
         for (const [key, value] of Object.entries(this.props.icons)) {
             icons.push(<img id={`idIconimage${key}`} key={key} src={value.url} alt={`Icon ${key}`} onClick={(e) => this.props.onClickIcon(e)} className="image-icon"/>);

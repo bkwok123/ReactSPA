@@ -150,7 +150,9 @@ class FaceDetection extends Component {
         }
     }     
 
+    // https://web.dev/read-files/
     handleFile (parent, file) {
+        // Use FileReader to convert local file to base64 byte file
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
@@ -188,8 +190,7 @@ class FaceDetection extends Component {
         const modal = document.getElementById(id);
         modal.setAttribute("class", "modalhide");
     };
-
-    // https://web.dev/read-files/
+    
     render() {              
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
