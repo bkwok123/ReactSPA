@@ -15,7 +15,7 @@ class FaceDetection extends Component {
     constructor() {
         super();
         this.state = {
-            app: new Clarifai.App ({apiKey: "b2d7a7095fd44de5b803b822204b6b4d"}),
+            app: new Clarifai.App ({apiKey: "b2d7a7095fd44de5b803b822204b6b4d"}),            
             input: '',
             imgURL: '',
             imgsize: {},
@@ -36,6 +36,7 @@ class FaceDetection extends Component {
                         }
                     },
             iconoffset: 0,
+            currentIconKey: "k1",
             errorMsg: "",
         }
     }
@@ -133,7 +134,7 @@ class FaceDetection extends Component {
 
             // Icons, Image and face boxes are updated first to improve page refresh time on web page
             icons[newKey] = {url: img.value};
-            this.setState({imgURL: img.value, icons: icons, box: []});
+            this.setState({imgURL: img.value, icons: icons, box: [], currentIconKey: newKey});
             this.onClickCloseModal("idFDmodal"); 
 
             // Icons and Image are updated again along with face boxes in detectface function
@@ -166,7 +167,7 @@ class FaceDetection extends Component {
 
             // Icons, Image and face boxes are updated first to improve page refresh time on web page
             icons[newKey] = {url: reader.result};
-            parent.setState({imgURL: reader.result, icons: icons, box: []}); 
+            parent.setState({imgURL: reader.result, icons: icons, box: [], currentIconKey: newKey}); 
             parent.onClickCloseModal("idFDmodal");
 
             // Icons and Image are updated again along with face boxes in detectface function
@@ -183,7 +184,7 @@ class FaceDetection extends Component {
         if ("boxdata" in this.state.icons[key]) {
             box = this.calculateFaceLocation(this.state.icons[key].boxdata);
         }
-        this.setState({imgURL: e.target.src, box: box});
+        this.setState({imgURL: e.target.src, box: box, currentIconKey: key});
     }
 
     onClickModal (id) {
@@ -206,11 +207,20 @@ class FaceDetection extends Component {
         this.setState({iconoffset: iconoffset > maxoffset ? maxoffset : iconoffset});
     };    
 
+    onClickDelImg (){
+        const icons = this.state.icons;
+        delete icons[this.state.currentIconKey];
+        this.setState({imgURL: "", icons: icons, currentIconKey: ""});
+    };
+
     render() {              
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
                 <div className={`FaceDetectionFrame`}>
-                    <button onClick={(e) => this.onClickModal("idFDmodal")} className={`${this.context.btnFG}`}>Add Image</button>
+                    <div className={`FaceDetectionControlGroup`}>
+                        <button onClick={() => this.onClickModal("idFDmodal")} className={`${this.context.btnFG}`}>Add Image</button>
+                        <button onClick={() => this.onClickDelImg()} className={`${this.context.btnFG}`}>Del Image</button>
+                    </div>
                     <ModalBox boxID="idFDmodal" hide={true}
                               content={<FaceDetectionControl parent={this}/>} 
                               onClickModalClose={() => this.onClickCloseModal("idFDmodal")}/>
