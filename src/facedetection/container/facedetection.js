@@ -137,6 +137,9 @@ class FaceDetection extends Component {
             // Icons and Image are updated again along with face boxes in detectface function
             // to display the face boxes with correct locations and sizes
             this.detectface(this, img.value, icons, newKey);
+
+            // Reset the input image URL
+            img.value = "";            
         }        
     }
 
