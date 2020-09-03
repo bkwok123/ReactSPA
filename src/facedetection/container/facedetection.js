@@ -6,6 +6,7 @@ import FaceRecognition from '../component/facerecognition';
 import FaceDetectionControl from '../component/facedetectioncontrol';
 import ImageIcon from '../component/imageicon';
 import ModalBox from '../component/modalbox';
+import facedemo from '../image/face-det.jpg';
 
 class FaceDetection extends Component {
 
@@ -20,7 +21,7 @@ class FaceDetection extends Component {
             imgsize: {},
             box: [],
             icons: {k1: {
-                        url: "https://samples.clarifai.com/face-det.jpg",
+                        url: facedemo,
                         boxdata:
                             {
                             outputs: [{
@@ -34,6 +35,7 @@ class FaceDetection extends Component {
                             }
                         }
                     },
+            iconoffset: 0,
             errorMsg: "",
         }
     }
@@ -193,15 +195,35 @@ class FaceDetection extends Component {
         const modal = document.getElementById(id);
         modal.setAttribute("class", "modalhide");
     };
-    
+
+    onClickPrevIcon (){
+        const iconoffset = this.state.iconoffset - 1;
+        this.setState({iconoffset: iconoffset < 0 ? 0 : iconoffset});
+    };
+
+    onClickNextIcon (maxoffset){
+        const iconoffset = this.state.iconoffset + 1;        
+        this.setState({iconoffset: iconoffset > maxoffset ? maxoffset : iconoffset});
+    };    
+
     render() {              
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
-                <button onClick={(e) => this.onClickModal("idFDmodal")} className={`${this.context.btnFG}`}>Add Image</button>
-                <ModalBox boxID="idFDmodal" hide={true} content={<FaceDetectionControl parent={this}/>} onClickModalClose={() => this.onClickCloseModal("idFDmodal")}/>
-                <ModalBox boxID="idErrmodal" hide={true} content={<div className={`FaceDetectionError ${this.context.foreground}`}>{this.state.errorMsg}</div>} onClickModalClose={() => this.onClickCloseModal("idErrmodal")}/>
-                <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
-                <ImageIcon icons={this.state.icons} onClickIcon={(e) => this.onClickIcon(e)}/>
+                <div className={`FaceDetectionFrame`}>
+                    <button onClick={(e) => this.onClickModal("idFDmodal")} className={`${this.context.btnFG}`}>Add Image</button>
+                    <ModalBox boxID="idFDmodal" hide={true}
+                              content={<FaceDetectionControl parent={this}/>} 
+                              onClickModalClose={() => this.onClickCloseModal("idFDmodal")}/>
+                    <ModalBox boxID="idErrmodal" hide={true}
+                              content={<div className={`FaceDetectionError ${this.context.foreground}`}>{this.state.errorMsg}</div>}
+                              onClickModalClose={() => this.onClickCloseModal("idErrmodal")}/>
+                    <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
+                    <ImageIcon icons={this.state.icons}
+                               offset={this.state.iconoffset}
+                               onClickIcon={(e) => this.onClickIcon(e)}
+                               onClickPrevIcon={() => this.onClickPrevIcon()} 
+                               onClickNextIcon={(maxoffset) => this.onClickNextIcon(maxoffset)}/>
+                </div>
             </div>
         );
     }    
