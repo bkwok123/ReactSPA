@@ -7,14 +7,6 @@ input[type="file"] {
 }
 
 .FaceDetectionControl {
-    /* display: grid;
-    grid-template-columns: repeat(2, minmax(5vw, auto));
-    grid-template-rows: 5vh;
-    grid-template-areas: "h1 h1"
-                         "b1 b2"
-                         "b3 l1"
-                         "i1 i1"
-                         "b4 b4"; */
     display: flex;    
     flex-direction: column;
     justify-content: center;
@@ -24,31 +16,6 @@ input[type="file"] {
     min-height: 20vh;
     padding: 5vh;
   }
-
-/* .fdControlB1 {
-    grid-area: b1;
-}
-
-.fdControlB2 {
-    grid-area: b2;
-    text-align: center;
-}
-
-.fdControlB3 {
-    grid-area: b3;
-}
-
-.fdControlB4 {
-    grid-area: b4;
-}
-
-.fdControlL1 {
-    grid-area: l1;
-}
-
-.fdControlI1 {
-    grid-area: i1;
-} */
 
 .FaceDetectionControl > label, input, button {
     font-size: calc(0.65vw + 0.65vh);

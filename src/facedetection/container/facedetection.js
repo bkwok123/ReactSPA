@@ -19,18 +19,22 @@ class FaceDetection extends Component {
             imgURL: '',
             imgsize: {},
             box: [],
-            icons: [{url: "https://samples.clarifai.com/face-det.jpg",
-                     boxdata: {
-                                outputs: [{
-                                    data: {
-                                    regions: [
-                                        {region_info:{bounding_box: {top_row: 0.30806005, left_col: 0.21253838, bottom_row: 0.4773681, right_col: 0.30402377}}},
-                                        {region_info:{bounding_box: {top_row: 0.2116047, left_col: 0.68157023, bottom_row: 0.35884228, right_col: 0.74484473}}},
-                                        {region_info:{bounding_box: {top_row: 0.41287383, left_col: 0.77967566, bottom_row: 0.5900016, right_col: 0.8505466}}}
-                                    ]}}],
-                                status: {code: 10000, description: "Ok", req_id: "51216f4580ec4fa0a356dcfa478aa865"}
+            icons: {k1: {
+                        url: "https://samples.clarifai.com/face-det.jpg",
+                        boxdata:
+                            {
+                            outputs: [{
+                                data: {
+                                regions: [
+                                    {region_info:{bounding_box: {top_row: 0.30806005, left_col: 0.21253838, bottom_row: 0.4773681, right_col: 0.30402377}}},
+                                    {region_info:{bounding_box: {top_row: 0.2116047, left_col: 0.68157023, bottom_row: 0.35884228, right_col: 0.74484473}}},
+                                    {region_info:{bounding_box: {top_row: 0.41287383, left_col: 0.77967566, bottom_row: 0.5900016, right_col: 0.8505466}}}
+                                ]}}],
+                            status: {code: 10000, description: "Ok", req_id: "51216f4580ec4fa0a356dcfa478aa865"}
                             }
-                    }],
+                        }
+                    },
+            errorMsg: "",
         }
     }
 
@@ -79,9 +83,9 @@ class FaceDetection extends Component {
         return box;
     }
 
-    displayFaceBox = (box) => {
-        this.setState({box: box, imgsize: this.getImageSize() });
-    }
+    // displayFaceBox = (box) => {
+    //     this.setState({box: box, imgsize: this.getImageSize() });
+    // }
 
     getImageSize = () => {
         const image = document.getElementById("idInputimage");
@@ -97,42 +101,72 @@ class FaceDetection extends Component {
         this.setState({imgsize: imgsize});
     }
 
-    async onClickDetect () {
+    // async onClickDetect () {
+    //     try {
+    //         // Send byte file if local file is used or web link if web resource is used
+    //         let base64 = this.state.imgURL;
+    //         const n = base64.search("base64,");
+    //         base64 = base64.substring(n+7);
+    //         const img = n > 1 ? base64 : this.state.imgURL
+        
+    //         // Call third party API to identify face locations
+    //         const response = await this.state.app.models.predict(
+    //             Clarifai.FACE_DETECT_MODEL, img);
+
+    //         console.log(response);
+
+    //         // Save calculated face locations in React component states
+    //         this.displayFaceBox(this.calculateFaceLocation(response));
+    //     } catch (error) {
+    //         console.log("Error Message: ", error, " with image: ", this.state.imgURL);
+    //         alert("Error in detection: ", this.state.imgURL, error);
+    //     }
+    // }
+
+    async detectface (parent, imgURL, icons, newKey) {
         try {
             // Send byte file if local file is used or web link if web resource is used
-            let base64 = this.state.imgURL;
+            let base64 = imgURL;
             const n = base64.search("base64,");
             base64 = base64.substring(n+7);
-            const img = n > 1 ? base64 : this.state.imgURL
+            const img = n > 1 ? base64 : imgURL
         
             // Call third party API to identify face locations
-            const response = await this.state.app.models.predict(
+            const response = await parent.state.app.models.predict(
                 Clarifai.FACE_DETECT_MODEL, img);
 
-            console.log(response);
-
-            // Save calculated face locations in React component states
-            this.displayFaceBox(this.calculateFaceLocation(response));
+            icons[newKey] = {url: imgURL, boxdata: response};            
+            const box = parent.calculateFaceLocation(response);                                 
+            parent.setState({imgURL: imgURL, icons: icons, box: box, imgsize: parent.getImageSize()});            
         } catch (error) {
-            console.log("Error Message: ", error, " with image: ", this.state.imgURL);
-            alert("Error in detection: ", this.state.imgURL, error);
+            parent.onClickModal ("idErrmodal");
+            parent.setState({box: [], errorMsg: `Failed to detect image. ${error}`});
         }
     }
 
+    // Called on change by pasting image URL
     // example link:
     // https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F20%2F2020%2F07%2F19%2Ftiaras-2.jpg
     // https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ5w5KoZUITaB5-DqiKzvbEWYwetwxpNiPu5w&usqp=CAU
     // https://jooinn.com/images/people-8.jpg
-    onChangeImg () {
+    onChangeImgURL () {
         const img = document.getElementById("idInputImgLink");
         if (img.value !== "") {
-            const icons = this.state.icons.slice();
-            icons.push({url: img.value});
+            const icons = this.state.icons;
+            const newKey = `k${Object.keys(icons).length+1}`;
 
+            // Icons and Image are updated first to improve page refresh time on web page
+            icons[newKey] = {url: img.value};
             this.setState({imgURL: img.value, icons: icons});
+            this.onClickCloseModal("idFDmodal"); 
+
+            // Icons and Image are updated again along with face boxes in detectface function
+            // to display the face boxes with correct locations and sizes
+            this.detectface(this, img.value, icons, newKey);
         }        
     }
 
+    // Called on change by using browse button to upload image
     onChangeUpload (parent) {
         const img = document.getElementById("idImgFileSelector");
         if (img.files.length > 0) {
@@ -146,16 +180,28 @@ class FaceDetection extends Component {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-            const icons = parent.state.icons.slice();
-            icons.push({url: reader.result});
-            parent.setState({imgURL: reader.result, icons: icons});
+            const icons = parent.state.icons;
+            const newKey = `k${Object.keys(icons).length+1}`;
+
+            // Icons and Image are updated first to improve page refresh time on web page
+            icons[newKey] = {url: reader.result};
+            parent.setState({imgURL: reader.result, icons: icons}); 
+            parent.onClickCloseModal("idFDmodal");
+
+            // Icons and Image are updated again along with face boxes in detectface function
+            // to display the face boxes with correct locations and sizes
+            parent.detectface(parent, reader.result, icons, newKey);            
         }
     }
 
     onClickIcon (e) {
-        // NEED TO Revise the icons array to using key-value pair and updating new images
-        const box = this.calculateFaceLocation(this.state.icons[0].boxdata);
-        console.log("onClickIcon:", box);        
+        let key = e.target.id;
+        let box = [];
+        key = key.substring(key.search("k"));
+
+        if ("boxdata" in this.state.icons[key]) {
+            box = this.calculateFaceLocation(this.state.icons[key].boxdata);
+        }
         this.setState({imgURL: e.target.src, box: box});
     }
 
@@ -164,10 +210,15 @@ class FaceDetection extends Component {
         modal.setAttribute("class", "modalshow");
     }
     
-    onClickCloseModal (e){
-        const modal = e.target.parentNode.parentNode;
+    // onClickCloseModal (e){
+    //     const modal = e.target.parentNode.parentNode;
+    //     modal.setAttribute("class", "modalhide");
+    //     e.stopPropagation(); 
+    // };
+
+    onClickCloseModal (id){
+        const modal = document.getElementById(id);
         modal.setAttribute("class", "modalhide");
-        e.stopPropagation(); 
     };
 
     // https://web.dev/read-files/
@@ -175,11 +226,12 @@ class FaceDetection extends Component {
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
                 <button onClick={(e) => this.onClickModal("idFDmodal")} className={`${this.context.btnFG}`}>Add Image</button>
-                <ModalBox boxID="idFDmodal" hide={true} content={<FaceDetectionControl parent={this}/>} onClickModalClose={(e) => this.onClickCloseModal(e)}/>
+                <ModalBox boxID="idFDmodal" hide={true} content={<FaceDetectionControl parent={this}/>} onClickModalClose={() => this.onClickCloseModal("idFDmodal")}/>
+                <ModalBox boxID="idErrmodal" hide={true} content={<div className={`FaceDetectionError ${this.context.foreground}`}>{this.state.errorMsg}</div>} onClickModalClose={() => this.onClickCloseModal("idErrmodal")}/>
                 <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
                 <ImageIcon icons={this.state.icons} onClickIcon={(e) => this.onClickIcon(e)}/>
 
-                <button onClick={() => this.onClickDetect()} className={`${this.context.btnFG}`}>Detect</button>
+                {/* <button onClick={() => this.onClickDetect()} className={`${this.context.btnFG}`}>Detect</button> */}
             </div>
         );
     }    

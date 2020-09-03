@@ -5,11 +5,7 @@ const FaceRecognition = ({ imgURL, imgsize, box}) => {
     
     const displaybox = [];
 
-    console.log("FaceRecognition");
-
     if(box.length > 0) {
-        console.log("FaceRecognition: ", box);
-        console.log("imgsize: ", imgsize);
 
         for (let i=0; i<box.length; i++) {
             displaybox.push(

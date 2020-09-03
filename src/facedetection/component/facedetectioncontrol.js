@@ -51,7 +51,7 @@ class FaceDetectionControl extends Component {
                 <p className={`${this.context.btnFG}`}>OR</p>
                 <h1 className={`${this.context.btnFG}`}>Enter an external link on web:</h1>
 
-                <input id="idInputImgLink" type="text" onChange={() => parent.onChangeImg()} className={`${this.context.btnFG}`} placeholder="Paste URL"></input>
+                <input id="idInputImgLink" type="text" onChange={() => parent.onChangeImgURL()} className={`${this.context.btnFG}`} placeholder="Paste URL"></input>
             </div>            
         );
     }
