@@ -129,9 +129,9 @@ class FaceDetection extends Component {
             const icons = this.state.icons;
             const newKey = `k${Object.keys(icons).length+1}`;
 
-            // Icons and Image are updated first to improve page refresh time on web page
+            // Icons, Image and face boxes are updated first to improve page refresh time on web page
             icons[newKey] = {url: img.value};
-            this.setState({imgURL: img.value, icons: icons});
+            this.setState({imgURL: img.value, icons: icons, box: []});
             this.onClickCloseModal("idFDmodal"); 
 
             // Icons and Image are updated again along with face boxes in detectface function
@@ -157,9 +157,9 @@ class FaceDetection extends Component {
             const icons = parent.state.icons;
             const newKey = `k${Object.keys(icons).length+1}`;
 
-            // Icons and Image are updated first to improve page refresh time on web page
+            // Icons, Image and face boxes are updated first to improve page refresh time on web page
             icons[newKey] = {url: reader.result};
-            parent.setState({imgURL: reader.result, icons: icons}); 
+            parent.setState({imgURL: reader.result, icons: icons, box: []}); 
             parent.onClickCloseModal("idFDmodal");
 
             // Icons and Image are updated again along with face boxes in detectface function
