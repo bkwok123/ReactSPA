@@ -154,6 +154,9 @@ class FaceDetection extends Component {
             // Convert local file to base64 for API consumption
             this.handleFile(parent, img.files[0]);                          
         }
+
+        // Reset the input image URL
+        img.value = "";
     }     
 
     // https://web.dev/read-files/
@@ -216,18 +219,20 @@ class FaceDetection extends Component {
     render() {              
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
-                <div className={`FaceDetectionFrame`}>
-                    <div className={`FaceDetectionControlGroup`}>
+                <div className="FaceDetectionFrame">
+                    <div className="FaceDetectionControlGroup">
                         <button onClick={() => this.onClickModal("idFDmodal")} className={`${this.context.btnFG}`}>Add Image</button>
                         <button onClick={() => this.onClickDelImg()} className={`${this.context.btnFG}`}>Del Image</button>
                     </div>
                     <ModalBox boxID="idFDmodal" hide={true}
-                              content={<FaceDetectionControl parent={this}/>} 
-                              onClickModalClose={() => this.onClickCloseModal("idFDmodal")}/>
+                            content={<FaceDetectionControl parent={this}/>} 
+                            onClickModalClose={() => this.onClickCloseModal("idFDmodal")}/>
                     <ModalBox boxID="idErrmodal" hide={true}
-                              content={<div className={`FaceDetectionError ${this.context.foreground}`}>{this.state.errorMsg}</div>}
-                              onClickModalClose={() => this.onClickCloseModal("idErrmodal")}/>
-                    <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
+                            content={<div className={`FaceDetectionError ${this.context.foreground}`}>{this.state.errorMsg}</div>}
+                            onClickModalClose={() => this.onClickCloseModal("idErrmodal")}/>
+                    <div className="PictureFrame">
+                        <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
+                    </div>
                     <ImageIcon icons={this.state.icons}
                                offset={this.state.iconoffset}
                                onClickIcon={(e) => this.onClickIcon(e)}
