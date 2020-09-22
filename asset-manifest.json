@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/cohort4-reactcrud/static/css/main.86157ef1.chunk.css",
-    "main.js": "/cohort4-reactcrud/static/js/main.c004c8be.chunk.js",
-    "main.js.map": "/cohort4-reactcrud/static/js/main.c004c8be.chunk.js.map",
+    "main.js": "/cohort4-reactcrud/static/js/main.29416f1a.chunk.js",
+    "main.js.map": "/cohort4-reactcrud/static/js/main.29416f1a.chunk.js.map",
     "runtime-main.js": "/cohort4-reactcrud/static/js/runtime-main.c5a8a73a.js",
     "runtime-main.js.map": "/cohort4-reactcrud/static/js/runtime-main.c5a8a73a.js.map",
     "static/js/2.b8efea11.chunk.js": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js",
     "static/js/2.b8efea11.chunk.js.map": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js.map",
     "index.html": "/cohort4-reactcrud/index.html",
-    "precache-manifest.fdde5c69c6241d21fe39cf3783572a5d.js": "/cohort4-reactcrud/precache-manifest.fdde5c69c6241d21fe39cf3783572a5d.js",
+    "precache-manifest.d3abc5782984578821c29fcba04c8d98.js": "/cohort4-reactcrud/precache-manifest.d3abc5782984578821c29fcba04c8d98.js",
     "service-worker.js": "/cohort4-reactcrud/service-worker.js",
     "static/css/main.86157ef1.chunk.css.map": "/cohort4-reactcrud/static/css/main.86157ef1.chunk.css.map",
     "static/js/2.b8efea11.chunk.js.LICENSE.txt": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js.LICENSE.txt",
@@ -24,6 +24,6 @@
     "static/js/runtime-main.c5a8a73a.js",
     "static/js/2.b8efea11.chunk.js",
     "static/css/main.86157ef1.chunk.css",
-    "static/js/main.c004c8be.chunk.js"
+    "static/js/main.29416f1a.chunk.js"
   ]
 }
