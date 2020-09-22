@@ -1,29 +1,29 @@
 {
   "files": {
-    "main.css": "/cohort4-reactcrud/static/css/main.86157ef1.chunk.css",
-    "main.js": "/cohort4-reactcrud/static/js/main.29416f1a.chunk.js",
-    "main.js.map": "/cohort4-reactcrud/static/js/main.29416f1a.chunk.js.map",
-    "runtime-main.js": "/cohort4-reactcrud/static/js/runtime-main.c5a8a73a.js",
-    "runtime-main.js.map": "/cohort4-reactcrud/static/js/runtime-main.c5a8a73a.js.map",
-    "static/js/2.b8efea11.chunk.js": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js",
-    "static/js/2.b8efea11.chunk.js.map": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js.map",
-    "index.html": "/cohort4-reactcrud/index.html",
-    "precache-manifest.d3abc5782984578821c29fcba04c8d98.js": "/cohort4-reactcrud/precache-manifest.d3abc5782984578821c29fcba04c8d98.js",
-    "service-worker.js": "/cohort4-reactcrud/service-worker.js",
-    "static/css/main.86157ef1.chunk.css.map": "/cohort4-reactcrud/static/css/main.86157ef1.chunk.css.map",
-    "static/js/2.b8efea11.chunk.js.LICENSE.txt": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js.LICENSE.txt",
-    "static/media/book.svg": "/cohort4-reactcrud/static/media/book.4d9b8bfc.svg",
-    "static/media/face-det.jpg": "/cohort4-reactcrud/static/media/face-det.074d76c9.jpg",
-    "static/media/face-recognition.svg": "/cohort4-reactcrud/static/media/face-recognition.796ef64a.svg",
-    "static/media/graph.svg": "/cohort4-reactcrud/static/media/graph.8d6500df.svg",
-    "static/media/media.svg": "/cohort4-reactcrud/static/media/media.84fe8e48.svg",
-    "static/media/facedetection.css": "/cohort4-reactcrud/static/media/pic-frame1.3ea8f236.jpg",
-    "static/media/theme.svg": "/cohort4-reactcrud/static/media/theme.9bf9c5d3.svg"
+    "main.css": "/ReactSPA/static/css/main.9c42833f.chunk.css",
+    "main.js": "/ReactSPA/static/js/main.9052b163.chunk.js",
+    "main.js.map": "/ReactSPA/static/js/main.9052b163.chunk.js.map",
+    "runtime-main.js": "/ReactSPA/static/js/runtime-main.34c9f5f7.js",
+    "runtime-main.js.map": "/ReactSPA/static/js/runtime-main.34c9f5f7.js.map",
+    "static/js/2.586611ac.chunk.js": "/ReactSPA/static/js/2.586611ac.chunk.js",
+    "static/js/2.586611ac.chunk.js.map": "/ReactSPA/static/js/2.586611ac.chunk.js.map",
+    "index.html": "/ReactSPA/index.html",
+    "precache-manifest.51d61f202733688211d828988bb725c2.js": "/ReactSPA/precache-manifest.51d61f202733688211d828988bb725c2.js",
+    "service-worker.js": "/ReactSPA/service-worker.js",
+    "static/css/main.9c42833f.chunk.css.map": "/ReactSPA/static/css/main.9c42833f.chunk.css.map",
+    "static/js/2.586611ac.chunk.js.LICENSE.txt": "/ReactSPA/static/js/2.586611ac.chunk.js.LICENSE.txt",
+    "static/media/book.svg": "/ReactSPA/static/media/book.4d9b8bfc.svg",
+    "static/media/face-det.jpg": "/ReactSPA/static/media/face-det.074d76c9.jpg",
+    "static/media/face-recognition.svg": "/ReactSPA/static/media/face-recognition.796ef64a.svg",
+    "static/media/graph.svg": "/ReactSPA/static/media/graph.8d6500df.svg",
+    "static/media/media.svg": "/ReactSPA/static/media/media.84fe8e48.svg",
+    "static/media/facedetection.css": "/ReactSPA/static/media/pic-frame1.3ea8f236.jpg",
+    "static/media/theme.svg": "/ReactSPA/static/media/theme.9bf9c5d3.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.c5a8a73a.js",
-    "static/js/2.b8efea11.chunk.js",
-    "static/css/main.86157ef1.chunk.css",
-    "static/js/main.29416f1a.chunk.js"
+    "static/js/runtime-main.34c9f5f7.js",
+    "static/js/2.586611ac.chunk.js",
+    "static/css/main.9c42833f.chunk.css",
+    "static/js/main.9052b163.chunk.js"
   ]
 }
