@@ -31,7 +31,8 @@
 .FaceDetectionControlGroup {
     display: flex;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
+    margin-bottom: 1vh; 
 }
 
 .FaceDetectionError {

@@ -12,8 +12,8 @@ class AppsController extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeApp: <Tutorial />,
-            activePage: "Tutorial",
+            activeApp: <VideoCapture />,
+            activePage: "Video Capture",
             activeTheme: themes.dark,
         };
     } 
