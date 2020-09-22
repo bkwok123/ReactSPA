@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/cohort4-reactcrud/static/css/main.86157ef1.chunk.css",
+    "main.js": "/cohort4-reactcrud/static/js/main.c004c8be.chunk.js",
+    "main.js.map": "/cohort4-reactcrud/static/js/main.c004c8be.chunk.js.map",
+    "runtime-main.js": "/cohort4-reactcrud/static/js/runtime-main.c5a8a73a.js",
+    "runtime-main.js.map": "/cohort4-reactcrud/static/js/runtime-main.c5a8a73a.js.map",
+    "static/js/2.b8efea11.chunk.js": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js",
+    "static/js/2.b8efea11.chunk.js.map": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js.map",
+    "index.html": "/cohort4-reactcrud/index.html",
+    "precache-manifest.fdde5c69c6241d21fe39cf3783572a5d.js": "/cohort4-reactcrud/precache-manifest.fdde5c69c6241d21fe39cf3783572a5d.js",
+    "service-worker.js": "/cohort4-reactcrud/service-worker.js",
+    "static/css/main.86157ef1.chunk.css.map": "/cohort4-reactcrud/static/css/main.86157ef1.chunk.css.map",
+    "static/js/2.b8efea11.chunk.js.LICENSE.txt": "/cohort4-reactcrud/static/js/2.b8efea11.chunk.js.LICENSE.txt",
+    "static/media/book.svg": "/cohort4-reactcrud/static/media/book.4d9b8bfc.svg",
+    "static/media/face-det.jpg": "/cohort4-reactcrud/static/media/face-det.074d76c9.jpg",
+    "static/media/face-recognition.svg": "/cohort4-reactcrud/static/media/face-recognition.796ef64a.svg",
+    "static/media/graph.svg": "/cohort4-reactcrud/static/media/graph.8d6500df.svg",
+    "static/media/media.svg": "/cohort4-reactcrud/static/media/media.84fe8e48.svg",
+    "static/media/facedetection.css": "/cohort4-reactcrud/static/media/pic-frame1.3ea8f236.jpg",
+    "static/media/theme.svg": "/cohort4-reactcrud/static/media/theme.9bf9c5d3.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c5a8a73a.js",
+    "static/js/2.b8efea11.chunk.js",
+    "static/css/main.86157ef1.chunk.css",
+    "static/js/main.c004c8be.chunk.js"
+  ]
+}
