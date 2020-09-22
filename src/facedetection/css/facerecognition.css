@@ -1,13 +1,16 @@
 .face-recognition-container {
     display: flex;
     justify-content: center;
-    align-items: center;        
+    align-items: center;
+    margin: 2vh 2vw;
+    width: 60vw;
+    height: 60vh; 
 }
 
 .image-view {
     display: flex;
-    max-width: 50vw;
-    max-height: 50vh;
+    max-width: 38vw;
+    max-height: 38vh;
 }
 
 .bounding-box-container {
@@ -26,7 +29,8 @@
 
 .bounding-box {
     position: absolute;
-    box-shadow: 0 0 5px #149df2 inset;
+    /* box-shadow: 0 0 5px #149df2 inset; */
+    box-shadow: 0 0 5px inset;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

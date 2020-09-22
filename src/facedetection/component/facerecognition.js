@@ -6,6 +6,7 @@ const FaceRecognition = ({ imgURL, imgsize, box}) => {
     const displaybox = [];
 
     if(box.length > 0) {
+
         for (let i=0; i<box.length; i++) {
             displaybox.push(
             <div className="bounding-box-set" key={`bs${i}`}>
@@ -16,7 +17,7 @@ const FaceRecognition = ({ imgURL, imgsize, box}) => {
 
     return (
         <div className="face-recognition-container">        
-            <img id="idInputimage" src={imgURL} alt="Face Detection" className="image-view"/>
+            <img id="idInputimage" src={imgURL} className="image-view"/>
             <div className="bounding-box-container">
                 <div className="bounding-boxes" style={{width: imgsize.width, height: imgsize.height}}>
                     {displaybox}

@@ -24,6 +24,7 @@ export const themes = {
       activefill: 'ThemeLightActf',
       activeSelf: 'ThemeLightActs',
       chdbtn: 'ThemeLightChdBtn',
+      border: 'ThemeLightBorder',
     },
     dark: {
       foreground: 'ThemeDarkFG',
@@ -48,6 +49,7 @@ export const themes = {
       activefill: 'ThemeDarkActf',
       activeSelf: 'ThemeDarkActs',
       chdbtn: 'ThemeDarkChdBtn',
+      border: 'ThemeDarkBorder',
     },
   };
 

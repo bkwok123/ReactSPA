@@ -1,0 +1,43 @@
+.FaceDetectionIcon {
+    display: flex;    
+    position: relative; /* Must has position property for right property of a child to work */
+    justify-content: center;
+    align-items: center;    
+    margin: 1vh;
+    padding: 0 1vw;
+    width: 50vw;
+    height: 7vh;
+}
+
+.image-icon {
+    padding: 0.5vh 0.25vh 0.5vh 0.25vh;
+    max-width: 6vw;
+    max-height: 6vh;    
+}
+
+.image-icon:hover {
+    cursor: pointer;
+}
+
+/* Next & previous buttons */
+.image-icon-prev,
+.image-icon-next {
+    position: absolute;
+    cursor: pointer;
+    font-weight: bold;    
+    font-size: 5.25vh;    
+}
+
+.image-icon-prev {
+    left: 0;
+}
+
+.image-icon-next {
+    right: 0;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.image-icon-prev:hover,
+.image-icon-next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}

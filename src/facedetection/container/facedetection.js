@@ -3,6 +3,10 @@ import ThemeContext from '../../app/context/themecontext';
 import Clarifai from 'clarifai';
 import '../css/facedetection.css';
 import FaceRecognition from '../component/facerecognition';
+import FaceDetectionControl from '../component/facedetectioncontrol';
+import ImageIcon from '../component/imageicon';
+import ModalBox from '../component/modalbox';
+import facedemo from '../image/face-det.jpg';
 
 class FaceDetection extends Component {
 
@@ -11,17 +15,43 @@ class FaceDetection extends Component {
     constructor() {
         super();
         this.state = {
-            app: new Clarifai.App ({apiKey: "6cb9f81096b34514bb4f12dc54f90a13"}),
+            app: new Clarifai.App ({apiKey: "b2d7a7095fd44de5b803b822204b6b4d"}),            
             input: '',
-            imgURL: 'https://samples.clarifai.com/face-det.jpg',
+            imgURL: '',
             imgsize: {},
             box: [],
+            icons: {k1: {
+                        url: facedemo,
+                        boxdata:
+                            {
+                            outputs: [{
+                                data: {
+                                regions: [
+                                    {region_info:{bounding_box: {top_row: 0.30806005, left_col: 0.21253838, bottom_row: 0.4773681, right_col: 0.30402377}}},
+                                    {region_info:{bounding_box: {top_row: 0.2116047, left_col: 0.68157023, bottom_row: 0.35884228, right_col: 0.74484473}}},
+                                    {region_info:{bounding_box: {top_row: 0.41287383, left_col: 0.77967566, bottom_row: 0.5900016, right_col: 0.8505466}}}
+                                ]}}],
+                            status: {code: 10000, description: "Ok", req_id: "51216f4580ec4fa0a356dcfa478aa865"}
+                            }
+                        }
+                    },
+            iconoffset: 0,
+            currentIconKey: "k1",
+            errorMsg: "",
         }
     }
 
     componentDidMount () {
         window.addEventListener("resize", this.updateImageSize);
     }
+
+    componentDidUpdate () {
+
+        const imgsize = this.getImageSize();
+        if((this.state.imgsize.width !== imgsize.width) || (this.state.imgsize.height !== imgsize.height)) {
+            this.setState({imgsize: imgsize});
+        }
+    }    
 
     componentWillUnmount () {
         window.removeEventListener("resize", this.updateImageSize);
@@ -56,10 +86,6 @@ class FaceDetection extends Component {
         return box;
     }
 
-    displayFaceBox = (box) => {
-        this.setState({box: box, imgsize: this.getImageSize() });
-    }
-
     getImageSize = () => {
         const image = document.getElementById("idInputimage");
         const width = Number(image.width);
@@ -74,66 +100,145 @@ class FaceDetection extends Component {
         this.setState({imgsize: imgsize});
     }
 
-    async onClickDetect () {
+    async detectface (parent, imgURL, icons, newKey) {
         try {
             // Send byte file if local file is used or web link if web resource is used
-            let base64 = this.state.imgURL;
+            let base64 = imgURL;
             const n = base64.search("base64,");
             base64 = base64.substring(n+7);
-            const img = n > 1 ? base64 : this.state.imgURL
+            const img = n > 1 ? base64 : imgURL
         
             // Call third party API to identify face locations
-            const response = await this.state.app.models.predict(
+            const response = await parent.state.app.models.predict(
                 Clarifai.FACE_DETECT_MODEL, img);
 
-            // Save calculated face locations in React component states
-            this.displayFaceBox(this.calculateFaceLocation(response));         
+            icons[newKey] = {url: imgURL, boxdata: response};            
+            const box = parent.calculateFaceLocation(response);                                 
+            parent.setState({imgURL: imgURL, icons: icons, box: box, imgsize: parent.getImageSize()});            
         } catch (error) {
-            console.log("Error Message: ", error, " with image: ", this.state.imgURL);
-            alert("Error in detection: ", this.state.imgURL, error);
+            parent.onClickModal ("idErrmodal");
+            parent.setState({box: [], errorMsg: `Failed to detect image. ${error}`});
         }
     }
 
+    // Called on change by pasting image URL
     // example link:
     // https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F20%2F2020%2F07%2F19%2Ftiaras-2.jpg
-    onChangeImg () {
+    // https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ5w5KoZUITaB5-DqiKzvbEWYwetwxpNiPu5w&usqp=CAU
+    // https://jooinn.com/images/people-8.jpg
+    onChangeImgURL () {
         const img = document.getElementById("idInputImgLink");
         if (img.value !== "") {
-            this.setState({imgURL: img.value});
+            const icons = this.state.icons;
+            const newKey = `k${Object.keys(icons).length+1}`;
+
+            // Icons, Image and face boxes are updated first to improve page refresh time on web page
+            icons[newKey] = {url: img.value};
+            this.setState({imgURL: img.value, icons: icons, box: [], currentIconKey: newKey});
+            this.onClickCloseModal("idFDmodal"); 
+
+            // Icons and Image are updated again along with face boxes in detectface function
+            // to display the face boxes with correct locations and sizes
+            this.detectface(this, img.value, icons, newKey);
+
+            // Reset the input image URL
+            img.value = "";            
         }        
     }
 
-    onChangeUpload () {
+    // Called on change by using browse button to upload image
+    onChangeUpload (parent) {
         const img = document.getElementById("idImgFileSelector");
         if (img.files.length > 0) {
             // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
             // Convert local file to base64 for API consumption
-            const reader = new FileReader();
-            reader.readAsDataURL(img.files[0]);
-            reader.onloadend = () => {
-                this.setState({imgURL: reader.result});
-            }                                  
+            this.handleFile(parent, img.files[0]);                          
         }
+
+        // Reset the input image URL
+        img.value = "";
     }     
 
-    render() {      
+    // https://web.dev/read-files/
+    handleFile (parent, file) {
+        // Use FileReader to convert local file to base64 byte file
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            const icons = parent.state.icons;
+            const newKey = `k${Object.keys(icons).length+1}`;
 
+            // Icons, Image and face boxes are updated first to improve page refresh time on web page
+            icons[newKey] = {url: reader.result};
+            parent.setState({imgURL: reader.result, icons: icons, box: [], currentIconKey: newKey}); 
+            parent.onClickCloseModal("idFDmodal");
+
+            // Icons and Image are updated again along with face boxes in detectface function
+            // to display the face boxes with correct locations and sizes
+            parent.detectface(parent, reader.result, icons, newKey);            
+        }
+    }
+
+    onClickIcon (e) {
+        let key = e.target.id;
+        let box = [];
+        key = key.substring(key.search("k"));
+
+        if ("boxdata" in this.state.icons[key]) {
+            box = this.calculateFaceLocation(this.state.icons[key].boxdata);
+        }
+        this.setState({imgURL: e.target.src, box: box, currentIconKey: key});
+    }
+
+    onClickModal (id) {
+        const modal = document.getElementById(id);
+        modal.setAttribute("class", "modalshow");
+    }    
+
+    onClickCloseModal (id){
+        const modal = document.getElementById(id);
+        modal.setAttribute("class", "modalhide");
+    };
+
+    onClickPrevIcon (){
+        const iconoffset = this.state.iconoffset - 1;
+        this.setState({iconoffset: iconoffset < 0 ? 0 : iconoffset});
+    };
+
+    onClickNextIcon (maxoffset){
+        const iconoffset = this.state.iconoffset + 1;        
+        this.setState({iconoffset: iconoffset > maxoffset ? maxoffset : iconoffset});
+    };    
+
+    onClickDelImg (){
+        const icons = this.state.icons;
+        delete icons[this.state.currentIconKey];
+        this.setState({imgURL: "", icons: icons, currentIconKey: ""});
+    };
+
+    render() {              
         return (            
             <div className={`FaceDetectionApp ${this.context.background}`}>
-                <div className={`FaceDetectionControl ${this.context.foreground}`}>
-                    <button onClick={() => this.onChangeUpload()} className={`${this.context.btnFG} fdControlB1`}>Refresh Local</button>
-                    <label className={`${this.context.btnFG} fdControlB2 inputborder`}>
-                        <input id="idImgFileSelector" type="file" accept=".jpg, .jpeg, .png" onChange={() => this.onChangeUpload()}></input>
-                        Upload Local Image
-                    </label>
-                    
-                    <button onClick={() => this.onChangeImg()} className={`${this.context.btnFG} fdControlB3`}>Refresh Web Link</button>
-                    <label className={`${this.context.btnFG} fdControlL1`}>Enter an external link on web: </label>
-                    <input id="idInputImgLink" type="text" onChange={() => this.onChangeImg()} className={`${this.context.btnFG} fdControlI1`}></input>
-
-                    <button onClick={() => this.onClickDetect()} className={`${this.context.btnFG} fdControlB4`}>Detect</button>
+                <div className="FaceDetectionFrame">
+                    <div className="FaceDetectionControlGroup">
+                        <button onClick={() => this.onClickModal("idFDmodal")} className={`${this.context.btnFG}`}>Add Image</button>
+                        <button onClick={() => this.onClickDelImg()} className={`${this.context.btnFG}`}>Del Image</button>
+                    </div>
+                    <ModalBox boxID="idFDmodal" hide={true}
+                            content={<FaceDetectionControl parent={this}/>} 
+                            onClickModalClose={() => this.onClickCloseModal("idFDmodal")}/>
+                    <ModalBox boxID="idErrmodal" hide={true}
+                            content={<div className={`FaceDetectionError ${this.context.foreground}`}>{this.state.errorMsg}</div>}
+                            onClickModalClose={() => this.onClickCloseModal("idErrmodal")}/>
+                    <div className="PictureFrame">
+                        <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
+                    </div>
+                    <ImageIcon icons={this.state.icons}
+                               offset={this.state.iconoffset}
+                               onClickIcon={(e) => this.onClickIcon(e)}
+                               onClickPrevIcon={() => this.onClickPrevIcon()} 
+                               onClickNextIcon={(maxoffset) => this.onClickNextIcon(maxoffset)}/>
                 </div>
-                <FaceRecognition imgURL={this.state.imgURL} imgsize={this.state.imgsize} box={this.state.box}/>
             </div>
         );
     }    
